@@ -1,0 +1,19 @@
+{
+  "name": "patriot-web-solutions-site-release",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node tests/validate-release.mjs",
+    "verify:package": "node tests/validate-release.mjs --manifest && powershell -NoProfile -File scripts/Verify-Release.ps1",
+    "test:e2e": "node tests/run-playground-e2e.mjs",
+    "build": "powershell -NoProfile -File scripts/Build-Release.ps1"
+  },
+  "devDependencies": {
+    "@wp-playground/cli": "3.1.54",
+    "playwright": "1.63.0"
+  },
+  "overrides": {
+    "qs": "6.16.0"
+  }
+}

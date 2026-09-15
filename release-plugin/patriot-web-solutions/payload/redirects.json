@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "redirects": {
+    "/offerings/": "/solutions/",
+    "/donation-page/": "/donate/",
+    "/donations/": "/donate/",
+    "/donations/donation-form/": "/donate/",
+    "/privacy-policy-for-patriot-web-solutions/": "/privacy/",
+    "/terms-conditions/": "/terms/",
+    "/about/contact/": "/contact/",
+    "/contact/contact/": "/contact/",
+    "/offerings/contact/": "/contact/",
+    "/category/blog/": "/stories/",
+    "/2024/04/": "/stories/",
+    "/author/patriotwebsolution-com/": "/about/"
+  },
+  "gone": [
+    "/post-1/",
+    "/post-2/",
+    "/post-3/",
+    "/empowering-small-businesses-with-professional-websites-patriot-web-solutions/",
+    "/patriot-web-solutions-empowering-small-businesses-with-professional-websites-and-seo-strategies/",
+    "/empowering-small-businesses-with-professional-websites-and-seo-strategies/",
+    "/patriot-web-solutions-empowering-small-businesses-through-professional-websites/",
+    "/empowering-small-businesses-through-professional-websites-patriot-web-solutions/",
+    "/establishing-a-strong-online-presence-with-patriot-web-solutions/",
+    "/category/general/",
+    "/2023/07/"
+  ],
+  "preserve_until_transaction_review": [
+    "/basket/",
+    "/checkout/",
+    "/shop/",
+    "/my-account/",
+    "/my-account/lost-password/",
+    "/donor-dashboard/",
+    "/donation-confirmation/",
+    "/donation-failed/",
+    "/give/donation-form/",
+    "/product/brochure-package/",
+    "/product/test-product/",
+    "/product-category/web-development/",
+    "/product-category/e-commerce-store/"
+  ],
+  "notes": "Only exact safe mappings are enabled. Transactional, account, donation callback, and legacy product routes remain unchanged until authenticated migration review."
+}

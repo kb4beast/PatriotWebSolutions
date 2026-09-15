@@ -1,0 +1,31 @@
+# Route map
+
+## New or replaced pages
+
+`/`, `/learn/`, `/join/`, `/our-work/`, `/solutions/`, `/impact/`, `/about/`, `/get-involved/`, `/donate/`, `/contact/`, `/stories/`, `/privacy/`, `/terms/`, `/accessibility/`, `/learner-code/`
+
+## Exact permanent redirects
+
+- `/offerings/` → `/solutions/`
+- `/donation-page/`, `/donations/`, `/donations/donation-form/` → `/donate/`
+- `/privacy-policy-for-patriot-web-solutions/` → `/privacy/`
+- `/terms-conditions/` → `/terms/`
+- malformed contact routes → `/contact/`
+- `/category/blog/` and `/2024/04/` → `/stories/`
+- organization author archive → `/about/`
+
+## Intentional 410 responses
+
+`/post-1/`, `/post-2/`, `/post-3/`, the six repetitive legacy website/SEO articles listed in `payload/redirects.json`, `/category/general/`, `/2023/07/`. The database records are retained; these public URLs return 410 because no individually equivalent successor was verified.
+
+## Field Notes publication control
+
+The Stories archive and post sitemap include only posts assigned to the **Field Notes — reviewed** category (`pws-field-notes`). Existing posts remain in WordPress but are not surfaced by the new archive. Assign the category only after the author, sources, permissions, project status, and claims have been reviewed.
+
+The core user sitemap is disabled to avoid advertising account/author identifiers. The retired `general` and `blog` categories are excluded from the category sitemap; other taxonomies, including product taxonomies, are unchanged.
+
+## Preserved pending authenticated transaction review
+
+Basket, checkout, shop, My Account/password reset, donor dashboard, donation confirmation/failure, GiveWP form/callbacks, both product routes, and both product-category routes. These are not redirected by the release.
+
+The machine-readable map is `payload/redirects.json`. Query-string API/payment states are outside the generic map.

@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "baseURL": "http://127.0.0.1:9411",
+  "wordpress": "6.5",
+  "php": "8.1",
+  "routes": 15,
+  "redirect": "PASS",
+  "gone": "PASS",
+  "form_controls": "PASS",
+  "mobile_overflow": "PASS",
+  "rollback_and_reapply": "PASS",
+  "existing_page_revision_and_restore": "PASS",
+  "title_only_edit_preserved": "PASS",
+  "error_paths": "blocking preflight and unapproved page conflict PASS",
+  "activation_inert": "PASS",
+  "legacy_sitemap_isolation": "PASS",
+  "console_errors": [],
+  "boundary": "Local WordPress Playground without GiveWP, WooCommerce, live mail, payments, Hostinger cache, or private data."
+}

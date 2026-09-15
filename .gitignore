@@ -1,0 +1,6 @@
+node_modules/
+.build-stage/
+tests/playground/plugin.zip
+dist/home-desktop.png
+dist/home-mobile.png
+

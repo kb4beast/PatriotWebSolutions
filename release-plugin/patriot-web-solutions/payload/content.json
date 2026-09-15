@@ -1,0 +1,22 @@
+{
+  "version": "1.0.0",
+  "primary_navigation": ["learn", "our-work", "impact", "about", "get-involved"],
+  "pages": [
+    {"slug":"home","title":"Home","source":"content/home.html","menu_order":0},
+    {"slug":"learn","title":"Learn AI with us","source":"content/learn.html","menu_order":10},
+    {"slug":"join","title":"Join a learning cohort","source":"content/join.html","menu_order":20},
+    {"slug":"our-work","title":"Our work","source":"content/our-work.html","menu_order":30},
+    {"slug":"solutions","title":"Custom AI solutions","source":"content/solutions.html","menu_order":40},
+    {"slug":"impact","title":"Impact","source":"content/impact.html","menu_order":50},
+    {"slug":"about","title":"About Patriot Web Solutions","source":"content/about.html","menu_order":60},
+    {"slug":"get-involved","title":"Get involved","source":"content/get-involved.html","menu_order":70},
+    {"slug":"donate","title":"Support practical AI learning","source":"content/donate.html","menu_order":80},
+    {"slug":"contact","title":"Contact","source":"content/contact.html","menu_order":90},
+    {"slug":"stories","title":"Field notes","source":"content/stories.html","menu_order":100},
+    {"slug":"privacy","title":"Privacy notice","source":"content/privacy.html","menu_order":110},
+    {"slug":"terms","title":"Terms of use","source":"content/terms.html","menu_order":120},
+    {"slug":"accessibility","title":"Accessibility","source":"content/accessibility.html","menu_order":130},
+    {"slug":"learner-code","title":"Learning community agreement","source":"content/learner-code.html","menu_order":140}
+  ]
+}
+
