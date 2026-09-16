@@ -1,4 +1,4 @@
-# Release 2.0 acceptance record
+# Release 2.0.2 acceptance record
 
 ## Artifact
 
@@ -26,6 +26,14 @@
 - Dependency audit at moderate severity threshold: zero known vulnerabilities at test time
 
 Machine-readable receipts are in `dist/release-receipt.json`, `dist/playground-e2e-receipt.json`, and `dist/link-check-receipt.json`.
+
+## Hostinger staging evidence (2026-09-16)
+
+- A Hostinger staging copy was created after a live-site files-and-database backup.
+- WordPress 6.5.10, PHP 8.1.34, writable theme destination, post-name permalinks, a configured contact recipient, and published GiveWP form 2768 passed the installer preflight.
+- The installer replaced the three reviewed page conflicts (Home, About, Contact) and created its rollback snapshot. Rollback restored the prior staging homepage; the final 2.0.2 release was then applied cleanly.
+- The real theme switch initially retained the former navigation. Release 2.0.2 now finalizes its dedicated menu after WordPress completes the switch; the staging location shows `Patriot Web Solutions Primary` without a manual assignment.
+- All 18 redesigned routes were inspected on staging. The GiveWP form iframe renders on Donate; the preserved WooCommerce account dashboard and links render in the new theme. No payment or form-message submission was made.
 
 ## Boundaries requiring staging evidence
 

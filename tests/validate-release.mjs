@@ -10,7 +10,7 @@ const read = (...parts) => fs.readFileSync(path.join(plugin, ...parts), 'utf8');
 const content = JSON.parse(read('payload', 'content.json'));
 const redirects = JSON.parse(read('payload', 'redirects.json'));
 
-assert.equal(content.version, '2.0.0');
+assert.equal(content.version, '2.0.2');
 assert.equal(content.pages.length, 18);
 assert.equal(new Set(content.pages.map((page) => page.slug)).size, content.pages.length);
 const seenSlugs = new Set();

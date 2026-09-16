@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Patriot Web Solutions Site Release
  * Description: Reversible installer, forms, redirects, and project catalog for the Patriot Web Solutions redesign.
- * Version: 2.0.0
+ * Version: 2.0.2
  * Requires at least: 6.5
  * Requires PHP: 8.1
  * Author: Patriot Web Solutions
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('PWS_RELEASE_VERSION', '2.0.0');
+define('PWS_RELEASE_VERSION', '2.0.2');
 define('PWS_RELEASE_FILE', __FILE__);
 define('PWS_RELEASE_DIR', plugin_dir_path(__FILE__));
 define('PWS_RELEASE_URL', plugin_dir_url(__FILE__));
@@ -25,6 +25,7 @@ require_once PWS_RELEASE_DIR . 'includes/class-pws-public.php';
 require_once PWS_RELEASE_DIR . 'admin/class-pws-admin.php';
 
 register_activation_hook(__FILE__, array('PWS_Installer', 'activate'));
+add_action('wp_loaded', array('PWS_Installer', 'finalize_theme_menu_locations'), 100);
 
 // Core kses strips tabindex, but scrollable <pre> exhibits need it for keyboard access (WCAG 2.1.1).
 add_filter('wp_kses_allowed_html', static function ($tags, $context) {

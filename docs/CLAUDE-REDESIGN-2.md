@@ -10,3 +10,7 @@ The imported source was rebuilt using this repository's release scripts and Word
 - Update versioned build paths, source checks, and the Candid evidence-link allowlist.
 
 Acceptance evidence is in `docs/ACCEPTANCE.md` and `dist/`. The package's staging and production instructions are in `release-plugin/patriot-web-solutions/INSTALL.md`.
+
+## Hostinger staging correction — release 2.0.2
+
+The first real theme switch kept the old WordPress primary menu. The installer now records the intended theme menu location and completes it after WordPress finishes switching themes. A second staging check found the preserved WooCommerce account page functional but visually unfinished, so the bundled theme now gives it a page title, compact account navigation, and a readable content panel. The footer email address breaks at `@` when its column is narrow. Staging rollback and clean 2.0.2 apply verified these changes.

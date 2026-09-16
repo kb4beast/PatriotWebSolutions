@@ -108,6 +108,14 @@ select.input { appearance: none; -webkit-appearance: none; background-image: lin
 /* — page shell — */
 .pws-wrap { width: 100%; max-width: var(--wrap); margin: 0 auto; padding: 0 var(--edge); }
 .pws-page { padding-block: calc(3 * var(--leading)) calc(4 * var(--leading)); }
+.pws-page__title { margin-bottom: var(--leading); }
+.pws-site .woocommerce-MyAccount-navigation { float: none; width: 100%; margin: 0 0 var(--leading); }
+.pws-site .woocommerce-MyAccount-navigation ul { display: flex; flex-wrap: wrap; gap: var(--space-3); list-style: none; margin: 0; padding: 0; }
+.pws-site .woocommerce-MyAccount-navigation li { margin: 0; }
+.pws-site .woocommerce-MyAccount-navigation a { display: inline-flex; align-items: center; min-height: 44px; padding: var(--space-2) var(--space-4); border: 1px solid var(--color-divider); border-radius: var(--radius-md); color: var(--ink-2); text-decoration: none; }
+.pws-site .woocommerce-MyAccount-navigation a:hover, .pws-site .woocommerce-MyAccount-navigation .is-active a { border-color: var(--color-accent); color: var(--color-text); background: color-mix(in srgb, var(--color-accent) 9%, transparent); }
+.pws-site .woocommerce-MyAccount-content { float: none; width: 100%; max-width: 900px; margin: 0; padding: clamp(20px, 3vw, 40px); border: 1px solid var(--color-divider); border-radius: var(--radius-md); background: var(--color-surface); }
+.pws-site .woocommerce-MyAccount-content p:last-child { margin-bottom: 0; }
 .pws-kicker { position: relative; display: block; margin: 0 0 var(--half); font-size: 13px; line-height: var(--half); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-accent); font-feature-settings: "tnum" 1; }
 .pws-kicker::before { content: ""; position: absolute; left: -64px; top: calc(50% - 0.5px); width: 44px; height: 1px; background: var(--color-accent); }
 .pws-display { font-size: clamp(38px, 5.6vw, 76px); line-height: 1.08; letter-spacing: -0.02em; margin: 0 0 calc(var(--leading) * 1.2); margin-left: -0.05em; max-width: none; }

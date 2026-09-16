@@ -294,7 +294,11 @@ final class PWS_Installer
         }
 
         switch_theme('patriot-web-solutions');
-        set_theme_mod('nav_menu_locations', array('primary' => (int) $menu_id));
+        // switch_theme() updates the stored stylesheet, but get_stylesheet() can still
+        // resolve the previous theme for the remainder of this admin request.
+        // Target the new theme's option explicitly so WordPress does not retain
+        // the previous site's primary menu on the first public request.
+        self::queue_theme_menu_locations('patriot-web-solutions', array('primary' => (int) $menu_id));
         update_option('show_on_front', 'page');
         update_option('page_on_front', $page_ids['home'] ?? 0);
         update_option('page_for_posts', $page_ids['stories'] ?? 0);
@@ -392,7 +396,9 @@ final class PWS_Installer
         update_option('show_on_front', $snapshot['show_on_front'] ?? 'posts');
         update_option('page_on_front', (int) ($snapshot['page_on_front'] ?? 0));
         update_option('page_for_posts', (int) ($snapshot['page_for_posts'] ?? 0));
-        set_theme_mod('nav_menu_locations', $snapshot['nav_menu_locations'] ?? array());
+        if (!empty($snapshot['previous_stylesheet'])) {
+            self::queue_theme_menu_locations((string) $snapshot['previous_stylesheet'], $snapshot['nav_menu_locations'] ?? array());
+        }
         foreach (array('blogname', 'blogdescription') as $option) {
             if (!empty($snapshot['changed_' . $option])) {
                 update_option($option, (string) ($snapshot['previous_' . $option] ?? ''));
@@ -510,6 +516,38 @@ final class PWS_Installer
             return;
         }
         $force_delete ? wp_delete_post((int) $note->ID, true) : wp_trash_post((int) $note->ID);
+    }
+
+    private static function set_theme_menu_locations(string $stylesheet, array $locations): void
+    {
+        $option = 'theme_mods_' . $stylesheet;
+        $mods = get_option($option, array());
+        if (!is_array($mods)) {
+            $mods = array();
+        }
+        $mods['nav_menu_locations'] = $locations;
+        update_option($option, $mods);
+    }
+
+    private static function queue_theme_menu_locations(string $stylesheet, array $locations): void
+    {
+        self::set_theme_menu_locations($stylesheet, $locations);
+        // WordPress may map locations from the old theme on the next request.
+        // Reaffirm the intended assignment after that deferred switch runs.
+        update_option('pws_release_pending_menu_locations', array(
+            'stylesheet' => $stylesheet,
+            'locations' => $locations,
+        ), false);
+    }
+
+    public static function finalize_theme_menu_locations(): void
+    {
+        $pending = get_option('pws_release_pending_menu_locations');
+        if (!is_array($pending) || ($pending['stylesheet'] ?? '') !== get_stylesheet()) {
+            return;
+        }
+        set_theme_mod('nav_menu_locations', is_array($pending['locations'] ?? null) ? $pending['locations'] : array());
+        delete_option('pws_release_pending_menu_locations');
     }
 
     private static function remove_created_menu(array $snapshot): void
