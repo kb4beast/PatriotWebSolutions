@@ -1,5 +1,5 @@
 {
-  "version": "2.0.0",
+  "version": "2.0.2",
   "checked_at_utc": "2026-09-16T00:00:00Z",
   "method": "Each external URL referenced by site copy was fetched and read during the 2026-09-16 build; findings recorded by hand from the fetched page. Re-run before production.",
   "results": [

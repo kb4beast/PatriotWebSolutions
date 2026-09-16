@@ -1,5 +1,5 @@
 {
-  "version": "2.0.0",
+  "version": "2.0.2",
   "primary_navigation": ["learn", "our-work", "solutions", "impact", "about", "get-involved"],
   "pages": [
     {"slug":"home","title":"Home","source":"content/home.html","menu_order":0},

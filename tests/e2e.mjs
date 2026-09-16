@@ -77,6 +77,12 @@ try {
   await approvedConflict.check();
   await approvedApply.click();
   await page.getByText(/Release applied/i).waitFor();
+  await page.goto(`${baseURL}/wp-admin/nav-menus.php?action=locations`, { waitUntil: 'domcontentloaded' });
+  assert.match(
+    (await page.locator('select[name="menu-locations[primary]"] option:checked').textContent()).trim(),
+    /Patriot Web Solutions Primary/,
+    'the release menu must replace the previous theme menu on the first request'
+  );
 
   // Visitor context: fresh cookies (logged out). The pre-set cookie is Playground's own auto-login
   // opt-out marker; every route below also asserts the admin bar is genuinely absent.
