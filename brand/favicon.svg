@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="Patriot Web Solutions">
+  <rect width="64" height="64" rx="13" fill="#091836"/>
+  <path fill="#edf0f6" fill-rule="evenodd" d="M14 11h22c10 0 16 6 16 15s-6 15-16 15H24v12H14V11Zm10 10v10h12c4 0 6-2 6-5s-2-5-6-5H24Z"/>
+  <rect x="35" y="48" width="17" height="5" rx="1" fill="#f75c5b"/>
+</svg>
