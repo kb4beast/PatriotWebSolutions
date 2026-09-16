@@ -17,7 +17,7 @@
         <button class="pws-menu-toggle" type="button" aria-expanded="false" aria-controls="primary-menu"><span></span><span></span><span></span><span class="screen-reader-text">Open menu</span></button>
         <nav class="pws-nav" id="primary-menu" aria-label="Primary navigation">
             <?php wp_nav_menu(array('theme_location' => 'primary', 'container' => false, 'menu_class' => 'pws-nav__list', 'fallback_cb' => 'pws_primary_fallback', 'depth' => 1)); ?>
-            <div class="pws-nav__actions"><a class="pws-nav__join" href="<?php echo esc_url(home_url('/join/')); ?>">Join a cohort</a><a class="pws-nav__donate" href="<?php echo esc_url(home_url('/donate/')); ?>">Donate</a></div>
+            <div class="pws-nav__actions"><a class="pws-nav__join" href="<?php echo esc_url(home_url('/join/')); ?>">Join the list</a><a class="pws-nav__donate" href="<?php echo esc_url(home_url('/donate/')); ?>">Donate</a></div>
         </nav>
     </div>
 </header>

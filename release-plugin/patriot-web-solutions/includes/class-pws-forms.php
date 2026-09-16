@@ -61,7 +61,7 @@ final class PWS_Forms
                 </label>
             <?php else : ?>
                 <label>What can we help with?
-                    <select name="topic" required><option value="">Choose one</option><option>Learning cohorts</option><option>Donations</option><option>Custom AI solutions</option><option>Accessibility</option><option>Media or partnership</option><option>Something else</option></select>
+                    <select name="topic" required><option value="">Choose one</option><option>Learning cohorts</option><option>Donations</option><option>Custom AI solutions</option><option>Employer / workforce partnership</option><option>Volunteer or mentor</option><option>Accessibility</option><option>Media or partnership</option><option>Something else</option></select>
                 </label>
             <?php endif; ?>
             <label>Message <span class="pws-optional">optional</span><textarea name="message" rows="5" maxlength="2000"></textarea></label>

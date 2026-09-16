@@ -4,6 +4,8 @@
 
 `/`, `/learn/`, `/join/`, `/our-work/`, `/solutions/`, `/impact/`, `/about/`, `/get-involved/`, `/donate/`, `/contact/`, `/stories/`, `/privacy/`, `/terms/`, `/accessibility/`, `/learner-code/`
 
+Project records nested under Work (manifest `parent` key; parents are created first, children roll back first): `/our-work/hive-mind-os/`, `/our-work/ai-developer-workbench/`, `/our-work/coupon-hive/`.
+
 ## Exact permanent redirects
 
 - `/offerings/` → `/solutions/`
@@ -21,6 +23,8 @@
 ## Field Notes publication control
 
 The Stories archive and post sitemap include only posts assigned to the **Field Notes — reviewed** category (`pws-field-notes`). Existing posts remain in WordPress but are not surfaced by the new archive. Assign the category only after the author, sources, permissions, project status, and claims have been reviewed.
+
+The release installs three seed notes as **drafts** in that category (`why-we-rebuilt-this-website-in-public`, `how-to-read-our-release-receipt`, `designing-the-foundations-syllabus`). They are invisible to visitors until the owner reviews and publishes each one; if a post with the same slug already exists, the installer skips it and never overwrites.
 
 The core user sitemap is disabled to avoid advertising account/author identifiers. The retired `general` and `blog` categories are excluded from the category sitemap; other taxonomies, including product taxonomies, are unchanged.
 

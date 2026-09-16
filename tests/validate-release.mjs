@@ -11,8 +11,22 @@ const content = JSON.parse(read('payload', 'content.json'));
 const redirects = JSON.parse(read('payload', 'redirects.json'));
 
 assert.equal(content.version, '1.0.0');
-assert.equal(content.pages.length, 15);
+assert.equal(content.pages.length, 18);
 assert.equal(new Set(content.pages.map((page) => page.slug)).size, content.pages.length);
+const seenSlugs = new Set();
+for (const page of content.pages) {
+  if (page.parent !== undefined) {
+    assert.ok(typeof page.parent === 'string' && seenSlugs.has(page.parent), `parent must exist and precede child: ${page.slug}`);
+  }
+  seenSlugs.add(page.slug);
+}
+const livePaths = new Set(content.pages.map((page) => '/' + (page.parent ? page.parent + '/' : '') + page.slug + '/'));
+for (const legacy of [...Object.keys(redirects.redirects), ...redirects.gone]) {
+  assert.ok(!livePaths.has(legacy), `legacy route collides with a live route: ${legacy}`);
+}
+for (const target of Object.values(redirects.redirects)) {
+  assert.ok(livePaths.has(target), `redirect target is not a live route: ${target}`);
+}
 for (const page of content.pages) {
   assert.match(page.slug, /^[a-z0-9-]+$/);
   const sourcePath = path.join(plugin, 'payload', page.source);
@@ -29,6 +43,84 @@ for (const phrase of ['Monday', 'Wednesday', 'Friday', 'No flunk-out', '20–28'
 }
 for (const prohibited of ['job guarantee', 'guaranteed employment', 'official partner of OpenAI', 'official partner of Google']) {
   assert.ok(!allContent.toLowerCase().includes(prohibited), `unsupported claim: ${prohibited}`);
+}
+
+assert.ok(Array.isArray(content.notes) && content.notes.length === 3, 'three seeded field notes required');
+assert.equal(new Set(content.notes.map((note) => note.slug)).size, 3);
+const noteHtml = [];
+for (const note of content.notes) {
+  assert.match(note.slug, /^[a-z0-9-]+$/);
+  assert.ok(typeof note.title === 'string' && note.title.length > 5, `note title: ${note.slug}`);
+  const html = read('payload', note.source);
+  noteHtml.push(html);
+  assert.ok(html.trim().length > 400, `thin note: ${note.slug}`);
+  assert.doesNotMatch(html, /<script|on(click|load|error)=/i, `unsafe note: ${note.slug}`);
+}
+
+const projects = JSON.parse(read('payload', 'projects.json'));
+assert.equal(projects.projects.length, 3);
+assert.deepEqual(projects.projects.map((project) => project.slug).sort(), ['ai-developer-workbench', 'coupon-hive', 'hive-mind-os']);
+for (const project of projects.projects) {
+  assert.ok(['public', 'historical', 'development'].includes(project.state), `state: ${project.slug}`);
+  for (const field of ['name', 'state_label', 'checked_label', 'checked', 'summary']) {
+    assert.ok(typeof project[field] === 'string' && project[field].length > 0, `${field}: ${project.slug}`);
+  }
+  assert.match(project.checked, /^\d{4}-\d{2}-\d{2}$/);
+  assert.ok(project.checked_label.includes(project.checked), `checked_label must carry its date: ${project.slug}`);
+  assert.ok(Array.isArray(project.links), `links: ${project.slug}`);
+  if (project.state !== 'public') {
+    assert.equal(project.links.length, 0, `non-public project must not carry links: ${project.slug}`);
+  }
+}
+
+const facts = JSON.parse(read('payload', 'facts.json'));
+assert.ok(facts.facts && typeof facts.facts === 'object' && !Array.isArray(facts.facts), 'facts.json must carry a facts object');
+for (const value of Object.values(facts.facts)) assert.equal(typeof value, 'string');
+const orgStatusConfirmed = facts.facts.org_status_confirmed === 'true';
+
+const deferral = /will publish|will be published|will appear|will be displayed|will be linked|only after|being verified|will grow|are being prepared|must be confirmed|will be confirmed|being confirmed/gi;
+let deferralInsideImpact = 0;
+for (const page of content.pages) {
+  const html = read('payload', page.source);
+  const matches = html.match(deferral) ?? [];
+  if (page.source === 'content/impact.html') {
+    deferralInsideImpact = matches.length;
+  } else {
+    assert.equal(matches.length, 0, `deferral language outside impact: ${page.slug} -> ${matches.join(', ')}`);
+  }
+}
+assert.ok(deferralInsideImpact >= 1 && deferralInsideImpact <= 2, `impact deferral budget exceeded: ${deferralInsideImpact}`);
+
+// Visitor-facing PHP renders copy too (form notices, donation fallback, metas); hold it to the same truthfulness scans.
+const visitorPhpFiles = [
+  ['includes/class-pws-public.php', read('includes', 'class-pws-public.php')],
+  ['includes/class-pws-forms.php', read('includes', 'class-pws-forms.php')],
+  ...['header.php', 'footer.php', 'functions.php', 'front-page.php', 'page.php', 'home.php', 'index.php', '404.php']
+    .map((name) => [`payload/theme/patriot-web-solutions/${name}`, read('payload', 'theme', 'patriot-web-solutions', name)]),
+];
+for (const [name, source] of visitorPhpFiles) {
+  const phpDeferrals = source.match(deferral) ?? [];
+  assert.equal(phpDeferrals.length, 0, `deferral language in visitor-facing PHP: ${name} -> ${phpDeferrals.join(', ')}`);
+}
+
+const visitorCorpus = allContent + '\n' + noteHtml.join('\n');
+const truthCorpus = visitorCorpus + '\n' + visitorPhpFiles.map(([, source]) => source).join('\n');
+for (const banned of [/google-approved/i, /openai[- ]partner/i, /partnered with openai/i, /compliant with (google|openai)/i, /chatgpt\.com\/g\//i]) {
+  assert.doesNotMatch(truthCorpus, banned, `banned claim pattern: ${banned}`);
+}
+if (!orgStatusConfirmed) {
+  assert.doesNotMatch(truthCorpus, /tax[- ]deductible|501\(c\)\(3\)/i, 'tax status language requires org_status_confirmed in facts.json');
+}
+
+const allowedUrls = new Set([
+  'https://github.com/kb4beast/hive-mind-os',
+  'https://projects.propublica.org/nonprofits/organizations/991238039',
+  'https://www.guidestar.org/profile/99-1238039'
+]);
+const urlCorpus = visitorCorpus + '\n' + JSON.stringify(projects);
+for (const match of urlCorpus.matchAll(/https?:\/\/[^\s"'<>\\)\]]+/g)) {
+  const url = match[0].replace(/[.,;:]+$/, '');
+  assert.ok(allowedUrls.has(url), `URL outside evidence allowlist: ${url}`);
 }
 
 const publicPhp = read('includes', 'class-pws-public.php');

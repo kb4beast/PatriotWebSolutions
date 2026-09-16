@@ -2,6 +2,31 @@
 
 Complete these checks on Hostinger staging before production. They depend on current private records or account access and are deliberately not guessed in this package.
 
+## Owner-fact register (`payload/facts.json`)
+
+Visitor-facing copy renders complete without any of these keys; each key is an internal obligation, and adding it enriches the site. Never add a key before the underlying fact is verified.
+
+| Key | Unlocks | Verification required first |
+| --- | --- | --- |
+| `org_status_confirmed` (`"true"`) | JSON-LD `taxID`/`nonprofitStatus`/`foundingDate` gate | Owner confirms EIN **and** determination letter or IRS TEOS/Pub 78 check recorded with date |
+| `org_status_statement` | Categorical status sentence replacing the qualified EIN row | Same gate, plus qualified review of wording |
+| `org_tax_id` / `org_nonprofit_status` / `founding_date` | Structured-data fields | Same gate |
+| `receipt_language` | Donation receipt/deductibility language on `/donate/` | Qualified review of receipt wording |
+| `street_address` | Street line in JSON-LD address | Owner confirms publishable address |
+| `class_time_ct` | Exact Central Time meeting times | Cohort schedule fixed |
+| `founder_note` / `founder_name` | Signed note on home/about | Founder writes and approves it |
+| `adw_era` / `adw_listing_url` | ADW record enrichment; listing URL flips its chip to public if it passes the link check | Located from the builder account and re-verified |
+| `cost_structure` | Mission-cost line on `/solutions/` | Cost evidence retained |
+| `first_report_target` | First-report date on `/impact/` | Reporting period committed |
+| `hero_photo` | Real class photo replacing the labeled illustration | Written consent from every person shown |
+
+## Drafting reviews moved out of visitor copy
+
+- Reconcile the privacy notice against the live site's final analytics, donation, account, email, and hosting configuration; the final provider list, roles, international transfers, and retention settings must match the live configuration.
+- Have the terms of use reviewed against the organization's verified legal identity and actual operations; add governing-law, dispute, refund, tax, and formal legal-entity language only after that review.
+- Review and publish the three seeded field-note drafts (or leave them as drafts); they ship unpublished.
+- Owner accuracy review of the six-week foundations syllabus before enrollment opens.
+
 ## Organization and program facts
 
 - Confirm the exact legal entity name, jurisdiction, nonprofit/tax-exempt status, EIN display decision, donation deductibility language, and required state solicitation notices with qualified counsel or the organization's records.

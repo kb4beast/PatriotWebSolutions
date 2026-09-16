@@ -1,7 +1,7 @@
 {
-    "generated_at_utc":  "2026-09-15T22:03:02.0078049Z",
+    "generated_at_utc":  "2026-09-16T01:01:47.6296179Z",
     "artifact":  "dist/patriot-web-solutions-release-1.0.0.zip",
-    "bytes":  2070221,
-    "sha256":  "d70a98949c01405f9f8b8dadffa95dedbd9ff9a7d90b2f8b133c507ebbbb0e70",
-    "file_count_excluding_manifest":  40
+    "bytes":  2114922,
+    "sha256":  "8aa25da329b24bce9c7c56bf4db9d893394fb14f5dda3d4b90255040d1e93eff",
+    "file_count_excluding_manifest":  51
 }

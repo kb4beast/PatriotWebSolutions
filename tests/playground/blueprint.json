@@ -8,6 +8,13 @@
   "login": true,
   "steps": [
     {
+      "step": "setSiteOptions",
+      "options": {
+        "blogname": "Patriot Web Solutions",
+        "blogdescription": "Live, patient AI instruction for military families in Killeen, Texas"
+      }
+    },
+    {
       "step": "installPlugin",
       "pluginData": {
         "resource": "bundled",

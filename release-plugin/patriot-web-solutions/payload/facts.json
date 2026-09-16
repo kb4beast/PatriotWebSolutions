@@ -1,0 +1,5 @@
+{
+  "version": "1.0.0",
+  "notes": "Confirmed owner facts only. Every key mirrors an obligation in PRELAUNCH-CHECKLIST.md. Absent keys make components render their complete-now variant; never add a key before the underlying fact is verified.",
+  "facts": {}
+}

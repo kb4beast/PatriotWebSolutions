@@ -1,0 +1,21 @@
+{
+  "checked_at_utc": "2026-09-16T01:01:32.755Z",
+  "allowlist_size": 3,
+  "urls": [
+    {
+      "url": "https://github.com/kb4beast/hive-mind-os",
+      "result": "PASS",
+      "http_status": 200
+    },
+    {
+      "url": "https://projects.propublica.org/nonprofits/organizations/991238039",
+      "result": "PASS",
+      "http_status": 200
+    },
+    {
+      "url": "https://www.guidestar.org/profile/99-1238039",
+      "result": "PASS",
+      "http_status": 200
+    }
+  ]
+}

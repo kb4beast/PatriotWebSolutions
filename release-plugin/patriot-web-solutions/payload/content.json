@@ -3,13 +3,16 @@
   "primary_navigation": ["learn", "our-work", "impact", "about", "get-involved"],
   "pages": [
     {"slug":"home","title":"Home","source":"content/home.html","menu_order":0},
-    {"slug":"learn","title":"Learn AI with us","source":"content/learn.html","menu_order":10},
+    {"slug":"learn","title":"Learn","source":"content/learn.html","menu_order":10},
     {"slug":"join","title":"Join a learning cohort","source":"content/join.html","menu_order":20},
-    {"slug":"our-work","title":"Our work","source":"content/our-work.html","menu_order":30},
+    {"slug":"our-work","title":"Work","source":"content/our-work.html","menu_order":30},
+    {"slug":"hive-mind-os","title":"Hive Mind OS","source":"content/work-hive-mind-os.html","menu_order":31,"parent":"our-work"},
+    {"slug":"ai-developer-workbench","title":"AI Developer Workbench","source":"content/work-ai-developer-workbench.html","menu_order":32,"parent":"our-work"},
+    {"slug":"coupon-hive","title":"Coupon Hive","source":"content/work-coupon-hive.html","menu_order":33,"parent":"our-work"},
     {"slug":"solutions","title":"Custom AI solutions","source":"content/solutions.html","menu_order":40},
     {"slug":"impact","title":"Impact","source":"content/impact.html","menu_order":50},
-    {"slug":"about","title":"About Patriot Web Solutions","source":"content/about.html","menu_order":60},
-    {"slug":"get-involved","title":"Get involved","source":"content/get-involved.html","menu_order":70},
+    {"slug":"about","title":"About","source":"content/about.html","menu_order":60},
+    {"slug":"get-involved","title":"Partners","source":"content/get-involved.html","menu_order":70},
     {"slug":"donate","title":"Support practical AI learning","source":"content/donate.html","menu_order":80},
     {"slug":"contact","title":"Contact","source":"content/contact.html","menu_order":90},
     {"slug":"stories","title":"Field notes","source":"content/stories.html","menu_order":100},
@@ -17,6 +20,10 @@
     {"slug":"terms","title":"Terms of use","source":"content/terms.html","menu_order":120},
     {"slug":"accessibility","title":"Accessibility","source":"content/accessibility.html","menu_order":130},
     {"slug":"learner-code","title":"Learning community agreement","source":"content/learner-code.html","menu_order":140}
+  ],
+  "notes": [
+    {"slug":"why-we-rebuilt-this-website-in-public","title":"Why we rebuilt this website in public","source":"notes/why-we-rebuilt-this-website-in-public.html"},
+    {"slug":"how-to-read-our-release-receipt","title":"How to read our release receipt","source":"notes/how-to-read-our-release-receipt.html"},
+    {"slug":"designing-the-foundations-syllabus","title":"Designing the six-week foundations syllabus","source":"notes/designing-the-foundations-syllabus.html"}
   ]
 }
-

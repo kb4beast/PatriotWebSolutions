@@ -51,9 +51,9 @@ final class PWS_Installer
 
         $page_conflicts = array();
         foreach (($manifest['pages'] ?? array()) as $page) {
-            $existing = get_page_by_path((string) $page['slug'], OBJECT, 'page');
+            $existing = get_page_by_path(self::page_path($page), OBJECT, 'page');
             if ($existing && get_post_meta($existing->ID, '_pws_release_managed', true) !== PWS_RELEASE_VERSION) {
-                $page_conflicts[] = '/' . $page['slug'] . '/';
+                $page_conflicts[] = '/' . self::page_path($page) . '/';
             }
         }
 
@@ -107,6 +107,13 @@ final class PWS_Installer
             'created_page_states' => array(),
             'updated_pages' => array(),
             'pending_page' => array(),
+            'created_note_ids' => array(),
+            'created_note_states' => array(),
+            'pending_note' => array(),
+            'changed_blogname' => false,
+            'previous_blogname' => '',
+            'changed_blogdescription' => false,
+            'previous_blogdescription' => '',
             'created_menu_id' => 0,
             'pending_menu' => false,
             'created_term_id' => 0,
@@ -135,16 +142,22 @@ final class PWS_Installer
                 self::rollback_snapshot($snapshot);
                 return new WP_Error('pws_content_missing', 'A required page content file is missing: ' . ($page['source'] ?? 'unknown'));
             }
+            $parent_slug = (string) ($page['parent'] ?? '');
+            if ($parent_slug !== '' && empty($page_ids[$parent_slug])) {
+                self::rollback_snapshot($snapshot);
+                return new WP_Error('pws_parent_missing', 'A child page is listed before its parent in the release manifest: /' . self::page_path($page) . '/');
+            }
             $page_content = (string) file_get_contents($content_path);
             $planned = array(
                 'post_title' => sanitize_text_field((string) $page['title']),
                 'post_content' => wp_kses_post($page_content),
                 'post_excerpt' => '',
                 'post_status' => 'publish',
+                'post_parent' => $parent_slug !== '' ? (int) $page_ids[$parent_slug] : 0,
                 'menu_order' => (int) ($page['menu_order'] ?? 0),
             );
             $planned_hash = self::fingerprint_fields($planned);
-            $existing = get_page_by_path((string) $page['slug'], OBJECT, 'page');
+            $existing = get_page_by_path(self::page_path($page), OBJECT, 'page');
             if ($existing) {
                 $managed = get_post_meta($existing->ID, '_pws_release_managed', true) === PWS_RELEASE_VERSION;
                 if (!$managed) {
@@ -158,6 +171,7 @@ final class PWS_Installer
                         'post_content' => (string) $existing->post_content,
                         'post_excerpt' => (string) $existing->post_excerpt,
                         'post_status' => (string) $existing->post_status,
+                        'post_parent' => (int) $existing->post_parent,
                         'menu_order' => (int) $existing->menu_order,
                         'before_state_hash' => self::page_fingerprint($existing),
                         'release_state_hash' => $planned_hash,
@@ -185,7 +199,7 @@ final class PWS_Installer
                 continue;
             }
 
-            $snapshot['pending_page'] = array('slug' => (string) $page['slug'], 'state_hash' => $planned_hash);
+            $snapshot['pending_page'] = array('slug' => (string) $page['slug'], 'path' => self::page_path($page), 'state_hash' => $planned_hash);
             self::checkpoint($snapshot);
             $page_id = wp_insert_post(array_merge(array('post_type' => 'page', 'post_name' => sanitize_title((string) $page['slug'])), $planned), true);
             if (is_wp_error($page_id)) {
@@ -198,6 +212,41 @@ final class PWS_Installer
             self::checkpoint($snapshot);
             self::set_release_meta((int) $page_id, $page_content);
             $page_ids[$page['slug']] = (int) $page_id;
+        }
+
+        $field_notes = get_term_by('slug', self::FIELD_NOTES_SLUG, 'category');
+        $field_notes_term_id = $field_notes ? (int) $field_notes->term_id : (int) $snapshot['created_term_id'];
+        foreach (($manifest['notes'] ?? array()) as $note) {
+            $note_path = PWS_RELEASE_DIR . 'payload/' . ltrim((string) ($note['source'] ?? ''), '/');
+            if (!is_file($note_path)) {
+                self::rollback_snapshot($snapshot);
+                return new WP_Error('pws_content_missing', 'A required field-note file is missing: ' . ($note['source'] ?? 'unknown'));
+            }
+            $existing_note = get_posts(array('name' => sanitize_title((string) $note['slug']), 'post_type' => 'post', 'post_status' => 'any', 'numberposts' => 1));
+            if ($existing_note) {
+                continue;
+            }
+            $note_content = (string) file_get_contents($note_path);
+            $planned_note = array(
+                'post_title' => sanitize_text_field((string) $note['title']),
+                'post_content' => wp_kses_post($note_content),
+                'post_excerpt' => '',
+                'post_status' => 'draft',
+                'post_parent' => 0,
+                'menu_order' => 0,
+            );
+            $note_hash = self::fingerprint_fields($planned_note);
+            $snapshot['pending_note'] = array('slug' => (string) $note['slug'], 'state_hash' => $note_hash);
+            self::checkpoint($snapshot);
+            $note_id = wp_insert_post(array_merge(array('post_type' => 'post', 'post_name' => sanitize_title((string) $note['slug']), 'post_category' => $field_notes_term_id > 0 ? array($field_notes_term_id) : array()), $planned_note), true);
+            if (is_wp_error($note_id)) {
+                self::rollback_snapshot($snapshot);
+                return $note_id;
+            }
+            $snapshot['created_note_ids'][] = (int) $note_id;
+            $snapshot['created_note_states'][(string) $note_id] = $note_hash;
+            $snapshot['pending_note'] = array();
+            self::checkpoint($snapshot);
         }
 
         $menu_id = wp_get_nav_menu_object(self::MENU_SLUG);
@@ -231,6 +280,8 @@ final class PWS_Installer
         update_option('show_on_front', 'page');
         update_option('page_on_front', $page_ids['home'] ?? 0);
         update_option('page_for_posts', $page_ids['stories'] ?? 0);
+        self::maybe_brand_option('blogname', 'Patriot Web Solutions', array('My WordPress Website', 'My WordPress Site', ''), $snapshot);
+        self::maybe_brand_option('blogdescription', 'Practical AI learning for military members, veterans, and their families', array('Just another WordPress site', ''), $snapshot);
         update_option('pws_release_redirects_enabled', '1', false);
         $snapshot['status'] = 'applied';
         self::checkpoint($snapshot);
@@ -283,9 +334,14 @@ final class PWS_Installer
         update_option('page_on_front', (int) ($snapshot['page_on_front'] ?? 0));
         update_option('page_for_posts', (int) ($snapshot['page_for_posts'] ?? 0));
         set_theme_mod('nav_menu_locations', $snapshot['nav_menu_locations'] ?? array());
+        foreach (array('blogname', 'blogdescription') as $option) {
+            if (!empty($snapshot['changed_' . $option])) {
+                update_option($option, (string) ($snapshot['previous_' . $option] ?? ''));
+            }
+        }
 
         $preserved = array();
-        foreach (($snapshot['created_page_ids'] ?? array()) as $page_id) {
+        foreach (array_reverse(array_map('intval', $snapshot['created_page_ids'] ?? array())) as $page_id) {
             $page = get_post((int) $page_id);
             if (!$page) {
                 continue;
@@ -301,6 +357,20 @@ final class PWS_Installer
             wp_trash_post((int) $page->ID);
         }
         self::recover_pending_page($snapshot, false, $preserved);
+
+        foreach (array_reverse(array_map('intval', $snapshot['created_note_ids'] ?? array())) as $note_id) {
+            $note = get_post($note_id);
+            if (!$note) {
+                continue;
+            }
+            $expected = (string) ($snapshot['created_note_states'][(string) $note_id] ?? '');
+            if ($expected === '' || !hash_equals($expected, self::page_fingerprint($note))) {
+                $preserved[] = $note_id;
+                continue;
+            }
+            wp_trash_post($note_id);
+        }
+        self::recover_pending_note($snapshot, false, $preserved);
 
         foreach (($snapshot['updated_pages'] ?? array()) as $before) {
             $page = get_post((int) ($before['ID'] ?? 0));
@@ -329,11 +399,15 @@ final class PWS_Installer
 
     private static function rollback_snapshot(array $snapshot): void
     {
-        foreach (($snapshot['created_page_ids'] ?? array()) as $page_id) {
+        foreach (array_reverse(array_map('intval', $snapshot['created_page_ids'] ?? array())) as $page_id) {
             wp_delete_post((int) $page_id, true);
+        }
+        foreach (array_reverse(array_map('intval', $snapshot['created_note_ids'] ?? array())) as $note_id) {
+            wp_delete_post($note_id, true);
         }
         $preserved = array();
         self::recover_pending_page($snapshot, true, $preserved);
+        self::recover_pending_note($snapshot, true, $preserved);
         foreach (($snapshot['updated_pages'] ?? array()) as $before) {
             self::restore_page($before);
         }
@@ -348,7 +422,7 @@ final class PWS_Installer
         if (empty($pending['slug'])) {
             return;
         }
-        $page = get_page_by_path((string) $pending['slug'], OBJECT, 'page');
+        $page = get_page_by_path((string) ($pending['path'] ?? $pending['slug']), OBJECT, 'page');
         if (!$page || in_array((int) $page->ID, array_map('intval', $snapshot['created_page_ids'] ?? array()), true)) {
             return;
         }
@@ -358,6 +432,25 @@ final class PWS_Installer
             return;
         }
         $force_delete ? wp_delete_post((int) $page->ID, true) : wp_trash_post((int) $page->ID);
+    }
+
+    private static function recover_pending_note(array $snapshot, bool $force_delete, array &$preserved): void
+    {
+        $pending = $snapshot['pending_note'] ?? array();
+        if (empty($pending['slug'])) {
+            return;
+        }
+        $found = get_posts(array('name' => sanitize_title((string) $pending['slug']), 'post_type' => 'post', 'post_status' => 'any', 'numberposts' => 1));
+        if (!$found || in_array((int) $found[0]->ID, array_map('intval', $snapshot['created_note_ids'] ?? array()), true)) {
+            return;
+        }
+        $note = $found[0];
+        $expected = (string) ($pending['state_hash'] ?? '');
+        if (!$force_delete && ($expected === '' || !hash_equals($expected, self::page_fingerprint($note)))) {
+            $preserved[] = (int) $note->ID;
+            return;
+        }
+        $force_delete ? wp_delete_post((int) $note->ID, true) : wp_trash_post((int) $note->ID);
     }
 
     private static function remove_created_menu(array $snapshot): void
@@ -407,6 +500,7 @@ final class PWS_Installer
             'post_content' => (string) ($before['post_content'] ?? ''),
             'post_excerpt' => (string) ($before['post_excerpt'] ?? ''),
             'post_status' => (string) ($before['post_status'] ?? 'draft'),
+            'post_parent' => (int) ($before['post_parent'] ?? 0),
             'menu_order' => (int) ($before['menu_order'] ?? 0),
         ));
         self::restore_release_meta($page_id, $before);
@@ -425,6 +519,23 @@ final class PWS_Installer
         update_option(self::ROLLBACK_OPTION, $snapshot, false);
     }
 
+    private static function page_path(array $page): string
+    {
+        $parent = (string) ($page['parent'] ?? '');
+        return ($parent !== '' ? $parent . '/' : '') . (string) ($page['slug'] ?? '');
+    }
+
+    private static function maybe_brand_option(string $option, string $value, array $defaults, array &$snapshot): void
+    {
+        $current = (string) get_option($option, '');
+        if (!in_array(trim($current), $defaults, true)) {
+            return;
+        }
+        $snapshot['previous_' . $option] = $current;
+        $snapshot['changed_' . $option] = true;
+        update_option($option, $value);
+    }
+
     private static function page_fingerprint(?WP_Post $page): string
     {
         if (!$page) {
@@ -435,6 +546,7 @@ final class PWS_Installer
             'post_content' => (string) $page->post_content,
             'post_excerpt' => (string) $page->post_excerpt,
             'post_status' => (string) $page->post_status,
+            'post_parent' => (int) $page->post_parent,
             'menu_order' => (int) $page->menu_order,
         ));
     }
@@ -446,6 +558,7 @@ final class PWS_Installer
             'post_content' => (string) ($fields['post_content'] ?? ''),
             'post_excerpt' => (string) ($fields['post_excerpt'] ?? ''),
             'post_status' => (string) ($fields['post_status'] ?? ''),
+            'post_parent' => (int) ($fields['post_parent'] ?? 0),
             'menu_order' => (int) ($fields['menu_order'] ?? 0),
         ), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
     }

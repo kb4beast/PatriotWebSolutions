@@ -25,6 +25,14 @@ if (-not (Test-Path -LiteralPath (Join-Path $pluginSource 'patriot-web-solutions
     throw 'Release plugin source is missing.'
 }
 
+# Stamp evidence-check dates with the builder's local date: authored record dates on the site are
+# US-Central, and a UTC stamp from an evening build reads as tomorrow next to them.
+$projectsPath = Join-Path $pluginSource 'payload/projects.json'
+$buildDate = (Get-Date).ToString('yyyy-MM-dd')
+$projectsText = [System.IO.File]::ReadAllText($projectsPath)
+$projectsText = [regex]::Replace($projectsText, '(?<="checked(?:_label)?":\s*"[^"]*?)\d{4}-\d{2}-\d{2}', $buildDate)
+[System.IO.File]::WriteAllText($projectsPath, $projectsText, $utf8NoBom)
+
 $manifestFiles = Get-ChildItem -LiteralPath $pluginSource -Recurse -File |
     Where-Object { $_.FullName -ne $manifestPath } |
     Sort-Object FullName |

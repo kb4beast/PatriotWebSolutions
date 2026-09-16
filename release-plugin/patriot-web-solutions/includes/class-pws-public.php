@@ -35,23 +35,25 @@ final class PWS_Public
         if ($form_id > 0 && shortcode_exists('give_form')) {
             return '<div class="pws-donation-embed">' . do_shortcode('[give_form id="' . $form_id . '"]') . '</div>';
         }
-        return '<div class="pws-notice"><h3>Donation setup is being verified</h3><p>We are confirming the secure donation form before accepting gifts through this page. Please contact <a href="mailto:support@patriotwebsolutions.org">support@patriotwebsolutions.org</a> if you would like to support the mission now.</p></div>';
+        return '<div class="pws-notice"><h3>No online donations today</h3><p>This page has no live donation form. To give or ask a question now, email <a href="mailto:support@patriotwebsolutions.org">support@patriotwebsolutions.org</a>.</p></div>';
     }
 
     public static function project_catalog(): string
     {
-        $projects = array(
-            array('name' => 'Hive Mind OS', 'state' => 'Active development', 'copy' => 'An evidence-driven operating system for coordinating specialist AI agents, preserving provenance, testing claims, and separating implementation from independent review.'),
-            array('name' => 'AI Developer Workbench', 'state' => 'Historical project — public record pending', 'copy' => 'A prior assistant concept for helping people structure and complete software work. A public demonstration and current availability will be linked only after verification.'),
-            array('name' => 'Coupon Hive', 'state' => 'In development', 'copy' => 'A skills-based workflow for finding and checking legitimate coupons, rebates, free items, and public activities without promoting chance-based giveaways.'),
-        );
+        $decoded = json_decode((string) file_get_contents(PWS_RELEASE_DIR . 'payload/projects.json'), true);
+        $projects = is_array($decoded['projects'] ?? null) ? $decoded['projects'] : array();
         ob_start(); ?>
-        <div class="pws-projects">
+        <div class="pws-records">
             <?php foreach ($projects as $project) : ?>
-                <article class="pws-project">
-                    <p class="pws-kicker"><?php echo esc_html($project['state']); ?></p>
-                    <h3><?php echo esc_html($project['name']); ?></h3>
-                    <p><?php echo esc_html($project['copy']); ?></p>
+                <article class="pws-record" id="<?php echo esc_attr((string) ($project['slug'] ?? '')); ?>">
+                    <p class="pws-chip pws-chip--<?php echo esc_attr((string) ($project['state'] ?? 'development')); ?>"><?php echo esc_html((string) ($project['state_label'] ?? '')); ?> — <?php echo esc_html((string) ($project['checked_label'] ?? '')); ?></p>
+                    <h3><a href="<?php echo esc_url(home_url('/our-work/' . (string) ($project['slug'] ?? '') . '/')); ?>"><?php echo esc_html((string) ($project['name'] ?? '')); ?></a></h3>
+                    <p><?php echo esc_html((string) ($project['summary'] ?? '')); ?></p>
+                    <?php if (($project['state'] ?? '') === 'public') : ?>
+                        <?php foreach (($project['links'] ?? array()) as $link) : ?>
+                            <p class="pws-record__link"><a href="<?php echo esc_url((string) ($link['url'] ?? '')); ?>" rel="external noopener"><?php echo esc_html((string) ($link['label'] ?? '')); ?> (external)</a></p>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </article>
             <?php endforeach; ?>
         </div>
