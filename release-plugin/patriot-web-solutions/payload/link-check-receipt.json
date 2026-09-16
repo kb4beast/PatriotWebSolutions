@@ -1,0 +1,39 @@
+{
+  "version": "2.0.0",
+  "checked_at_utc": "2026-09-16T00:00:00Z",
+  "method": "Each external URL referenced by site copy was fetched and read during the 2026-09-16 build; findings recorded by hand from the fetched page. Re-run before production.",
+  "results": [
+    {
+      "url": "https://github.com/kb4beast/hive-mind-os",
+      "status": "ok",
+      "finding": "Public repository; MIT license file present; README \"Status: early. Here is exactly what works.\" table and the verify command match the site excerpts (three of five status rows shown; two elided). Description field reads \"TBD\".",
+      "referenced_by": [
+        "/",
+        "/our-work/",
+        "/our-work/hive-mind-os/",
+        "/about/",
+        "/impact/"
+      ]
+    },
+    {
+      "url": "https://projects.propublica.org/nonprofits/organizations/991238039",
+      "status": "ok",
+      "finding": "Patriot Web Solutions, Killeen, TX; EIN 99-1238039; \"Designated as a 501(c)(3)\"; \"Tax exemption issued: March 2024\"; donations tax deductible; no Form 990 data available.",
+      "referenced_by": [
+        "/",
+        "/about/",
+        "/donate/",
+        "/impact/"
+      ]
+    },
+    {
+      "url": "https://app.candid.org/profile/15321808/patriot-web-solutions-99-1238039",
+      "status": "ok",
+      "finding": "Candid profile (GuideStar successor): \"Patriot Web Solutions | EIN 99-1238039\". Replaces www.guidestar.org/profile/99-1238039, which the owner reported as not loading on 2026-09-16; the legacy page had shown ruling year 2024, NTEE P20, Killeen TX.",
+      "referenced_by": [
+        "/about/",
+        "/donate/"
+      ]
+    }
+  ]
+}

@@ -1,8 +1,9 @@
 # Asset and code notes
 
 - Release plugin and bespoke theme: created for Patriot Web Solutions in this implementation workflow. Repository licensing/public-release decision remains with the owner.
-- `assets/images/ai-learning-workshop.png`: original AI-generated illustrative image created with OpenAI's built-in image-generation tool on September 15, 2026. It does not depict documented participants. Final prompt is retained in the source repository and the site labels the scene as illustrative.
-- `assets/images/og-card.png` (1200×630 social card) and `assets/images/logo.png` (512×512 structured-data logo): generated deterministically from the theme's own design tokens by `scripts/New-BrandAssets.ps1` in the source repository (System.Drawing text and shapes; system fonts Georgia/Segoe UI). No third-party imagery.
+- Visual system: the theme's structure (type scale, spacing, radii, shadows, fading rules, outlined actions) follows the Nocturne design system; the color tokens are retuned to the organization's palette — navy ground, off-white text, red accent — with ramps generated in OKLCH on Nocturne's lightness steps. Inter is referenced by name with system-font fallbacks; no remote font is loaded. Self-hosting Inter (SIL Open Font License 1.1) is optional — see the commented `@font-face` block in `assets/css/site.css`.
+- Icons: inline SVG in the Phosphor Icons visual language (MIT License, © Phosphor Icons — https://phosphoricons.com). `arrow-right` and `calendar` are Phosphor's regular-weight paths; `check`, `x`, `list`, and `arrow-up-right` are stroke equivalents drawn on the same 256-unit grid (16-unit round strokes). All are emitted by `pws_icon()` in the theme's `functions.php`; no icon font or third-party script is loaded.
+- `assets/images/og-card.png` (1200×630 social card) and `assets/images/logo.png` (512×512 structured-data logo / favicon fallback): rendered from the theme's own tokens and the "PW" mark on 2026-09-16 using the operating system's sans-serif where Inter was unavailable. No third-party imagery.
+- The 1.0.0 AI-generated hero illustration (`ai-learning-workshop.png`) is removed from this release. The hero renders type-only until a consented class photograph is recorded as the `hero_photo` owner fact.
 - No old-site images, testimonials, third-party code, remote fonts, analytics scripts, or provider logos are included.
-- WordPress, GiveWP, WooCommerce, Hostinger, Google, and OpenAI names identify compatibility or subject matter; no endorsement is implied.
-
+- WordPress, GiveWP, WooCommerce, Hostinger, GitHub, ProPublica, Candid/GuideStar, Google, and OpenAI names identify compatibility, sources, or subject matter; no endorsement is implied.

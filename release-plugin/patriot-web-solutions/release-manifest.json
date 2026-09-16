@@ -1,8 +1,8 @@
 {
     "schema_version":  1,
-    "release":  "patriot-web-solutions-1.0.0",
+    "release":  "patriot-web-solutions-2.0.0",
     "artifact_kind":  "WordPress installer plugin with bundled theme and reversible content migration",
-    "generated_at_utc":  "2026-09-16T01:01:47.4517641Z",
+    "generated_at_utc":  "2026-09-16T15:33:56.6529421Z",
     "minimum_wordpress":  "6.5",
     "minimum_php":  "8.1",
     "files":  [
@@ -13,8 +13,8 @@
                   },
                   {
                       "path":  "DATA-FLOWS.md",
-                      "bytes":  1814,
-                      "sha256":  "b5ba9473d9efd2c1d062543f65d6a5de76d881ff85748a6944773812b11cccfd"
+                      "bytes":  2103,
+                      "sha256":  "70e47994efca9b9cd738e57a3703d708dd6b3e90e052894523f4020e72eb10fa"
                   },
                   {
                       "path":  "includes/class-pws-facts.php",
@@ -23,243 +23,243 @@
                   },
                   {
                       "path":  "includes/class-pws-forms.php",
-                      "bytes":  7790,
-                      "sha256":  "ac6ebd5fd0711bfe0e4ff49b09f5216d12bc3be7b202f4fcefc016cbbc369108"
+                      "bytes":  8928,
+                      "sha256":  "c986387a454a858b9de627f99158c23c10c39d09da943dc685593ddc463c6ff5"
                   },
                   {
                       "path":  "includes/class-pws-installer.php",
-                      "bytes":  27971,
-                      "sha256":  "c6fe9760fbaf7994b74560168c2d0dc4d94689372f61d8988406cda636e6ddc6"
+                      "bytes":  31231,
+                      "sha256":  "0439a97adb7f2b1db81de11204451effd3c802c66d881ffae9a03999bc23b831"
                   },
                   {
                       "path":  "includes/class-pws-public.php",
-                      "bytes":  5043,
-                      "sha256":  "aba87cca2908773ceaf7fd603e09e14e1157146c68f75f4eed7c80d2f8d17ca9"
+                      "bytes":  7898,
+                      "sha256":  "be998d57b6ddc32665017c2a615cf330a0acddf684f72e8b87aab3b8623aff90"
                   },
                   {
                       "path":  "INSTALL.md",
-                      "bytes":  3021,
-                      "sha256":  "2e3cb71510b12f5d8910c4a30919fbf8ea613ec02783cfda8cb5cb92783296df"
+                      "bytes":  4233,
+                      "sha256":  "79201cb666beeae5bf23406ca39141b23dd62fa403a98b6fab79d2432621d0b0"
                   },
                   {
                       "path":  "LICENSES.md",
-                      "bytes":  1083,
-                      "sha256":  "5aa88b303c17e188ba7146b00935d2c6e4566b935baa0bbadb759d7d5c815f69"
+                      "bytes":  1949,
+                      "sha256":  "5d67b93e4f5d7d196736107ff7718e81264d5a5fe1fbdb7f06e68e0a8d87690f"
                   },
                   {
                       "path":  "patriot-web-solutions.php",
-                      "bytes":  1485,
-                      "sha256":  "e068dd5f55ffabe94fb4779b86132888a45635601e8deb5ed4be519e7c09e251"
+                      "bytes":  1599,
+                      "sha256":  "37b48800fbc9d3bcc4a7a88e9cfb45ad76cc73c153603617d80f3f2b8700840a"
                   },
                   {
                       "path":  "payload/content.json",
-                      "bytes":  2472,
-                      "sha256":  "156dc2a8ebc3f6ba3dd59021853f27064346ba059e0cd5ec8a1c8f9df13dbce5"
+                      "bytes":  2485,
+                      "sha256":  "43efeb38daa8f42f9fbf25731948034be80d36976a1b552d2cbfdd9a39f48a3b"
                   },
                   {
                       "path":  "payload/content/about.html",
-                      "bytes":  2536,
-                      "sha256":  "8c5c01d2a557df4cbf219aa5cc145ec07dede2ffb5ad0eeeff10b9dbcfe03a59"
+                      "bytes":  4210,
+                      "sha256":  "9748c25c3aaf805333d7e192631c5543d32569df2e444aa623ec8fb3fdec88d0"
                   },
                   {
                       "path":  "payload/content/accessibility.html",
-                      "bytes":  1414,
-                      "sha256":  "102ff0fd36df7adb30487e79880a7e0b3608e8acf52ae0c34040e9fc07337633"
+                      "bytes":  1901,
+                      "sha256":  "de5f08d0d44fdd0d2553a1151e13322243773557858e854292b5b4ef1ea47551"
                   },
                   {
                       "path":  "payload/content/contact.html",
-                      "bytes":  674,
-                      "sha256":  "aef6c8be1fa2624287777ef13b126fa045110bc1c6e9580bbc7ddcdc84329f5d"
+                      "bytes":  962,
+                      "sha256":  "3c4bba1a8fcbf0e4c3ceea529e9013aebfb752bfa744e2d8fe110693f5858f32"
                   },
                   {
                       "path":  "payload/content/donate.html",
-                      "bytes":  1564,
-                      "sha256":  "cdc7b2ac901e68ad04471a34b0c14bf2170325953de4596979eee6c0a6f28524"
+                      "bytes":  2230,
+                      "sha256":  "7bbf96f6ba7687e8d6211ad6f17f702954c6299442b07c11f3094672854b0810"
                   },
                   {
                       "path":  "payload/content/get-involved.html",
-                      "bytes":  2830,
-                      "sha256":  "e43fa7dbef4964cf686f1229cd2925d9839b2159f3b4353a2b0420664eb889d6"
+                      "bytes":  3535,
+                      "sha256":  "00186c0530e7cb9c6e8e4ae2c71e5e3972ad1be8af1b3debc3844987194a3f26"
                   },
                   {
                       "path":  "payload/content/home.html",
-                      "bytes":  5210,
-                      "sha256":  "50c2f930a50c0d7cf45678317a8cb11e6da104bc3e541fc304e06a879d6dc702"
+                      "bytes":  9027,
+                      "sha256":  "379a7dd620ba0f47c59d738a3ee5899510855791daeff0e13acddc0b6b617321"
                   },
                   {
                       "path":  "payload/content/impact.html",
-                      "bytes":  3217,
-                      "sha256":  "a6247daf9fb21300774bc4a0d2aa20a69b5ee6f4dbca70bc95fdcac6dd9f070a"
+                      "bytes":  4085,
+                      "sha256":  "31fbcf670bfb0c2db4da35d5e362b1ca90ad30aa7f2b6b7c6a66c18f8c4b00df"
                   },
                   {
                       "path":  "payload/content/join.html",
-                      "bytes":  1140,
-                      "sha256":  "9a75f6bcb564772cb23e31418c88b563d1ef6c4080596ca48de7530c516e3de4"
+                      "bytes":  1279,
+                      "sha256":  "004b2c25cf29438822287003d73b54a6b4f156e20525467c4ceb8c8d4711e284"
                   },
                   {
                       "path":  "payload/content/learn.html",
-                      "bytes":  6522,
-                      "sha256":  "10094bc4184fdfd73e4a4cd079bebc334ab6e9393f0696d5b1c58593fa7a535c"
+                      "bytes":  8864,
+                      "sha256":  "797c779ea2190b8a4079e79835214db3fea3941c86397f57f8aa9fd02771d045"
                   },
                   {
                       "path":  "payload/content/learner-code.html",
-                      "bytes":  1176,
-                      "sha256":  "35ca35b928c0be6d43da350c001e9573b4bbafd877907fc10fb4647e6d5d7b2d"
+                      "bytes":  1361,
+                      "sha256":  "c365199f634b3bf7d4ae4e36c2232148a415b003100646bd4c75707bfd019e7b"
                   },
                   {
                       "path":  "payload/content/our-work.html",
-                      "bytes":  1130,
-                      "sha256":  "0a828d95a03ee77082e3e4cef5390ec071a273ed71bc8f04b2f5d05f56b0b818"
+                      "bytes":  1275,
+                      "sha256":  "132c954a1fb33eeaf4ad52f98c9a200913983f2d6756b62ec8ed54e498c8c9b1"
                   },
                   {
                       "path":  "payload/content/privacy.html",
-                      "bytes":  2568,
-                      "sha256":  "a882f6ddead857fd009c13305697df69fd7ad2d206cbd991b8ca86773c9eb1fc"
+                      "bytes":  2625,
+                      "sha256":  "03b5f2f714bab18941dc8a8e088e497f56b29aeea0c3e59156ba51205e27e144"
                   },
                   {
                       "path":  "payload/content/solutions.html",
-                      "bytes":  1993,
-                      "sha256":  "f33be4b5b251f6157f85aa1b1254ae545b5e84581e2f9f5bb795e0b4b29c5448"
+                      "bytes":  2739,
+                      "sha256":  "439bdc5d328303e52ecefec3f0756a90938f820bc43d0caf9c2b49c0381128d7"
                   },
                   {
                       "path":  "payload/content/stories.html",
-                      "bytes":  652,
-                      "sha256":  "4f768317b84af459e833fae89bef0314a34e0b05dc2d58077f57b73764da8669"
+                      "bytes":  657,
+                      "sha256":  "e2beee4812d4d3ba32ac4976c4b74df64b3174394e594f6cd4c6d3bc90963f88"
                   },
                   {
                       "path":  "payload/content/terms.html",
-                      "bytes":  2598,
-                      "sha256":  "373716b0cb5e29fc5317196cd848b9068964f12bf020ac1f4fc594844312c4e1"
+                      "bytes":  2615,
+                      "sha256":  "1c6f25ee56fb7b4c2d8470c29fbb523141a3b53e1612afdac751ffaaaa90642d"
                   },
                   {
                       "path":  "payload/content/work-ai-developer-workbench.html",
-                      "bytes":  2442,
-                      "sha256":  "bfa2662a3dd740e4e9449d3fa7a13bf71377af94bfcc5afa81bb75389fe76558"
+                      "bytes":  2658,
+                      "sha256":  "501ca5f5b3b58e19bfdb93e240b5cca524fbd19b948b751b2ab756e4ac0519f5"
                   },
                   {
                       "path":  "payload/content/work-coupon-hive.html",
-                      "bytes":  1552,
-                      "sha256":  "d1761648af50599dbf2071f4479780d9a150a48c62ed1df859a865b473f5de3e"
+                      "bytes":  1711,
+                      "sha256":  "9b7ea468d5bdd578d153c55e72784ced206dd474f542a5f361aa0e1cab872ad5"
                   },
                   {
                       "path":  "payload/content/work-hive-mind-os.html",
-                      "bytes":  3711,
-                      "sha256":  "2ccb95e524b28c0f12f7f405693afda8d68b0b120f23454541a9b655e84f6920"
+                      "bytes":  4090,
+                      "sha256":  "71f9c7d07892a69140da4d140c44903fa0bc3d1896da29b0e6bb060b1abf3ab5"
                   },
                   {
                       "path":  "payload/facts.json",
                       "bytes":  260,
-                      "sha256":  "c6d45ff23ed99d7204b88509ad55ddd3e66d0de8434e6ba173a9c1e74d14b8e2"
+                      "sha256":  "57e48b2d26d56bd070f2d79daf6964e85848378ed4c46f69886b70c2978f5e5a"
+                  },
+                  {
+                      "path":  "payload/link-check-receipt.json",
+                      "bytes":  1637,
+                      "sha256":  "42545c96c4d6eb1d9dfa2a942da7af6f9e1f35d628d33f19c8d3cb714dbb001d"
                   },
                   {
                       "path":  "payload/notes/designing-the-foundations-syllabus.html",
-                      "bytes":  1429,
-                      "sha256":  "655a582c546088d9b2824071b4914cbc858f881ef9f8dbb7716f497c1924dc03"
+                      "bytes":  1442,
+                      "sha256":  "f9e3e1395b2a6b942bfebe94b9f4adb096b4d05fcf18f71fea4a7db491ded099"
                   },
                   {
                       "path":  "payload/notes/how-to-read-our-release-receipt.html",
                       "bytes":  1233,
-                      "sha256":  "4e4d0e7f7f71b7a1be7f425851f1b34512fa820d3a91e99899c183930e95b5a6"
+                      "sha256":  "d7d539df70b7ef2cab7b2ed44a53e19962d56e0f6f3bc7d0a9b1afa09f1f99f4"
                   },
                   {
                       "path":  "payload/notes/why-we-rebuilt-this-website-in-public.html",
-                      "bytes":  1208,
-                      "sha256":  "aae64c73ae8e18f513da2cdd3c7238e84a7ff02b213475a7c4008abb0dd888bc"
+                      "bytes":  1264,
+                      "sha256":  "0236490bbf2c63d260eebfb28739bc09a506302dafd608e833168364c4e6dc61"
                   },
                   {
                       "path":  "payload/projects.json",
                       "bytes":  1448,
-                      "sha256":  "f7d882f0bc9bf2270788c6b488e1955f19f64a7437e5e173fcc6ea2e179d9af2"
+                      "sha256":  "ef7fba322f23b2c6ff40f50acf78954cd127938fdf6f607245f39dcefe33fbc4"
                   },
                   {
                       "path":  "payload/redirects.json",
                       "bytes":  1735,
-                      "sha256":  "4aa004b59d8c690f66467446766cd93e652329db2461a8563a768b0952d502db"
+                      "sha256":  "c5a4650bfeaadd6fd7d44287213604b60df27b86ba11a9dcba1d5fa24fbe61e9"
                   },
                   {
                       "path":  "payload/theme/patriot-web-solutions/404.php",
-                      "bytes":  496,
-                      "sha256":  "d61640017e509cfc64cf5b79628f19aded6db2b4ac985d4c1a1d5278017c77dc"
+                      "bytes":  551,
+                      "sha256":  "e5fe943e53276642623397972b3f1215a186d5608f9c119287a8bed98322fee6"
                   },
                   {
                       "path":  "payload/theme/patriot-web-solutions/assets/css/site.css",
-                      "bytes":  22758,
-                      "sha256":  "e9534c8661a554b8749fe3ac3d26eadecbd302494b0b8fe38efc3ad339394c68"
-                  },
-                  {
-                      "path":  "payload/theme/patriot-web-solutions/assets/images/ai-learning-workshop.png",
-                      "bytes":  2135253,
-                      "sha256":  "fd5160a5f155b48f35132e609b0f35a746f5bf2cd1db3897f2764cf0af49e114"
+                      "bytes":  36682,
+                      "sha256":  "a280c29a62ff18dd239c25a9c7cf2f6aaa0222b23561653bd8ac212497f990a3"
                   },
                   {
                       "path":  "payload/theme/patriot-web-solutions/assets/images/logo.png",
-                      "bytes":  9103,
-                      "sha256":  "ac1d4d4b64561de7432d1079994f131709e23d7578c176c657815835269e4c02"
+                      "bytes":  27194,
+                      "sha256":  "de90dc2c7cb9f7ce4fe99b4927664b10ad85f049fbea4e60fe7c7a16e7efd6e8"
                   },
                   {
                       "path":  "payload/theme/patriot-web-solutions/assets/images/og-card.png",
-                      "bytes":  23596,
-                      "sha256":  "3832bb262ec6d73dfff0a258047bb7219fadee24d339599e7742f03f997ae3fb"
+                      "bytes":  188659,
+                      "sha256":  "18f704436e30af60b9e7488c14a0e1720480199d8dd39dca8687d090493c3d52"
                   },
                   {
                       "path":  "payload/theme/patriot-web-solutions/assets/js/site.js",
-                      "bytes":  628,
-                      "sha256":  "d9079c059ebca4303a108e23beb358b07d2499257d4bd951c8e1bc1af676d333"
+                      "bytes":  1523,
+                      "sha256":  "a9184286d087175a50e956431a682f1726b7bf4549b64d83624ed4fdd13bf931"
                   },
                   {
                       "path":  "payload/theme/patriot-web-solutions/footer.php",
-                      "bytes":  2417,
-                      "sha256":  "bf55a9cf3f6bc6c6e002f3508207f60934aadffccc079e5c2cc2f9f192fd0b58"
+                      "bytes":  2175,
+                      "sha256":  "e1358ffbfbacb8f3956f9cad533b2a2e475308d2e7fd1793b1c94d6c197e2879"
                   },
                   {
                       "path":  "payload/theme/patriot-web-solutions/front-page.php",
-                      "bytes":  182,
-                      "sha256":  "150561eaab68422068e4066e7a7f7e145bc0e5a5bbad68a5d4a0546bd3db9270"
+                      "bytes":  181,
+                      "sha256":  "8a71b9e180c2fe3bbb265e852d9b4cbbbb9052bfad9a2b5c0dbfdc1144be49f5"
                   },
                   {
                       "path":  "payload/theme/patriot-web-solutions/functions.php",
-                      "bytes":  7833,
-                      "sha256":  "18b6c2a880abcf6615a6f00cf770f70b101141426b968171f3ccfaba667d595c"
+                      "bytes":  9742,
+                      "sha256":  "815e71100fade0130ada4364ed20b31f01a20c2870de1ecf53ba7c671ce755ab"
                   },
                   {
                       "path":  "payload/theme/patriot-web-solutions/header.php",
-                      "bytes":  1470,
-                      "sha256":  "69b7b74a791d5acb86d90cec174711ee3b156c7cc61bf131c44e07f169b19359"
+                      "bytes":  1451,
+                      "sha256":  "567fa50c156a5b76c6370d636d9f287bebfcb916591d4d04dbf53ec515e93437"
                   },
                   {
                       "path":  "payload/theme/patriot-web-solutions/home.php",
-                      "bytes":  1387,
-                      "sha256":  "68578fa28c0113cadee252c471d7b4a1a54e20086d6a9e89485f73c307a786e7"
+                      "bytes":  1389,
+                      "sha256":  "57c73c57e116b30b74c39e7051062406816ef74b46fde9c597eeabbe02fe7d6a"
                   },
                   {
                       "path":  "payload/theme/patriot-web-solutions/index.php",
-                      "bytes":  494,
-                      "sha256":  "b47bd440fb55e74c289f3e0efb70dd3b4975c1ff0bea5900b8c0f79381766004"
+                      "bytes":  490,
+                      "sha256":  "7bb100b608c2f29e0adbb673e26c962fa904ee19baa2236a91b9024615674cb9"
                   },
                   {
                       "path":  "payload/theme/patriot-web-solutions/page.php",
-                      "bytes":  227,
-                      "sha256":  "a68f29bb9b86bf98864983c3637f428c0401783b27251f8e376b682164cdb44a"
+                      "bytes":  225,
+                      "sha256":  "64436316e4fa95290c836343ecdb2697f3b3f5e73f5c7c76543dc01b945c4faf"
                   },
                   {
                       "path":  "payload/theme/patriot-web-solutions/style.css",
-                      "bytes":  325,
-                      "sha256":  "c1050fe4e52980038cbbaf02a5d8e3291ab6f04a56f1d7d6ad4701816a2ad4db"
+                      "bytes":  375,
+                      "sha256":  "928b895fd02265509b5605f92254b4ae598608cf0905507b4bcbebaccbf43372"
                   },
                   {
                       "path":  "PRELAUNCH-CHECKLIST.md",
-                      "bytes":  6034,
-                      "sha256":  "317f5229d7cde7e2848d815da7e5b1f283ea293661b380fa64de705ae5134db0"
+                      "bytes":  7215,
+                      "sha256":  "c6a9a2adf76e196fc8099e233417ceb29bc79cecd3ae05d8e4c0cbf499dcfbea"
                   },
                   {
                       "path":  "ROLLBACK.md",
-                      "bytes":  967,
-                      "sha256":  "5510c1c8b46f4d9f283948f8e3a1a03909e9d36aa2f9f1f868ad86cb46d85350"
+                      "bytes":  1323,
+                      "sha256":  "64e94884098a15d9defb5363ce860e60710fac2ee4092afe6bbc7ccb3d1fa260"
                   },
                   {
                       "path":  "ROUTE-MAP.md",
-                      "bytes":  2459,
-                      "sha256":  "7f6f7ba3c03edb56f2125b1f86a75a300f5e17d6200d1bc2c3d869691aa97a4f"
+                      "bytes":  2751,
+                      "sha256":  "23181721d5afc1816b2274672a7e105664ce25535ef057fac9f3f1d06171de73"
                   }
               ]
 }

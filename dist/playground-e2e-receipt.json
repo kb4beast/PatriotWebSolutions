@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "baseURL": "http://127.0.0.1:9411",
+  "baseURL": "http://127.0.0.1:9412",
   "wordpress": "6.5",
   "php": "8.1",
   "routes": 18,
@@ -25,11 +25,12 @@
     "violations": 0,
     "documented_exceptions": []
   },
-  "impact_ledger_mobile_canary": "PASS — first entry cell 358px wide at 390px (minimum 200px)",
-  "table_caption_mobile_canary": "PASS — ledger caption 358px, syllabus caption 356px wide at 390px (minimum 200px)",
+  "impact_ledger_mobile_canary": "PASS — first entry cell 350px wide at 390px (minimum 200px)",
+  "table_caption_mobile_canary": "PASS — ledger caption 350px, syllabus caption 350px wide at 390px (minimum 200px)",
   "desktop_overflow": "PASS (18 routes, 1440px)",
   "tablet_overflow": "PASS (18 routes, 768px)",
   "mobile_overflow": "PASS (18 routes, 390px)",
+  "email_320px_canary": "PASS (about, contact, donate; full address and breakable links)",
   "redirect": "PASS",
   "gone": "PASS",
   "form_controls": "PASS",

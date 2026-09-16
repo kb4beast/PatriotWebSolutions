@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
-  "primary_navigation": ["learn", "our-work", "impact", "about", "get-involved"],
+  "version": "2.0.0",
+  "primary_navigation": ["learn", "our-work", "solutions", "impact", "about", "get-involved"],
   "pages": [
     {"slug":"home","title":"Home","source":"content/home.html","menu_order":0},
     {"slug":"learn","title":"Learn","source":"content/learn.html","menu_order":10},

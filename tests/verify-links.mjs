@@ -7,7 +7,7 @@ const plugin = path.join(root, 'release-plugin', 'patriot-web-solutions');
 const allowed = new Set([
   'https://github.com/kb4beast/hive-mind-os',
   'https://projects.propublica.org/nonprofits/organizations/991238039',
-  'https://www.guidestar.org/profile/99-1238039'
+  'https://app.candid.org/profile/15321808/patriot-web-solutions-99-1238039'
 ]);
 
 const sources = [path.join(plugin, 'payload', 'projects.json')];

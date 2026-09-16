@@ -1,6 +1,5 @@
-# Hero-image provenance
+# Release 2.0 image provenance
 
-Generated with OpenAI's built-in image-generation tool on September 15, 2026 for this project. It is an illustrative scene and is labeled that way on the site. It must not be described as a real class, participant, instructor, veteran, or family.
+The 1.0 AI-generated classroom illustration was removed. Release 2.0 ships only the original `PW` logo and social card rendered from the theme's colors and type. It does not show a class photograph until the owner provides an image with written consent from everyone depicted through the `hero_photo` fact.
 
-Final prompt is retained at `C:/Users/beesp/.codex/worktrees/0afa/hive-mind-os/deliverables/pws-site-assets/pws-ai-learning-workshop-hero.prompt.txt` in the originating workspace.
-
+The previous illustration and its original prompt remain in the 1.0 Git history for provenance; they are absent from the 2.0 package.

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Patriot Web Solutions Site Release
  * Description: Reversible installer, forms, redirects, and project catalog for the Patriot Web Solutions redesign.
- * Version: 1.0.0
+ * Version: 2.0.0
  * Requires at least: 6.5
  * Requires PHP: 8.1
  * Author: Patriot Web Solutions
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('PWS_RELEASE_VERSION', '1.0.0');
+define('PWS_RELEASE_VERSION', '2.0.0');
 define('PWS_RELEASE_FILE', __FILE__);
 define('PWS_RELEASE_DIR', plugin_dir_path(__FILE__));
 define('PWS_RELEASE_URL', plugin_dir_url(__FILE__));
@@ -35,7 +35,8 @@ add_filter('wp_kses_allowed_html', static function ($tags, $context) {
 }, 10, 2);
 
 add_action('plugins_loaded', static function (): void {
-    if (PWS_Installer::is_applied()) {
+    // Any applied version keeps shortcodes, redirects, and headers alive while an upgrade is pending review.
+    if (PWS_Installer::is_any_applied()) {
         PWS_Forms::register();
         PWS_Public::register();
     }

@@ -5,4 +5,3 @@
 <?php endwhile; ?>
 </main>
 <?php get_footer(); ?>
-

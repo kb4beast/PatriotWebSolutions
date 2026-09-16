@@ -1,13 +1,13 @@
 {
-  "version": "1.0.0",
+  "version": "2.0.0",
   "projects": [
     {
       "slug": "hive-mind-os",
       "name": "Hive Mind OS",
       "state": "public",
       "state_label": "Public & inspectable",
-      "checked_label": "verified 2026-09-15",
-      "checked": "2026-09-15",
+      "checked_label": "verified 2026-09-16",
+      "checked": "2026-09-16",
       "summary": "A verification-first framework for coordinating AI coding agents: claims are tested, provenance is preserved, and review is separated from implementation.",
       "links": [
         {"label": "Repository on GitHub", "url": "https://github.com/kb4beast/hive-mind-os"}
@@ -18,8 +18,8 @@
       "name": "AI Developer Workbench",
       "state": "historical",
       "state_label": "Historical",
-      "checked_label": "public listing not verified, checked 2026-09-15",
-      "checked": "2026-09-15",
+      "checked_label": "public listing not verified, checked 2026-09-16",
+      "checked": "2026-09-16",
       "summary": "An earlier custom-GPT assistant for structuring software work. The original listing has not been re-verified from the builder account, so this record carries no availability claim.",
       "links": []
     },
@@ -28,8 +28,8 @@
       "name": "Coupon Hive",
       "state": "development",
       "state_label": "In development",
-      "checked_label": "last updated 2026-09-15",
-      "checked": "2026-09-15",
+      "checked_label": "last updated 2026-09-16",
+      "checked": "2026-09-16",
       "summary": "A skills-based workflow for finding and checking legitimate coupons, rebates, and free local activities — built to be tested before it is promoted.",
       "links": []
     }

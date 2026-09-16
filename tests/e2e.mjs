@@ -90,7 +90,7 @@ try {
   });
 
   const expected = new Map([
-    ['/', /We teach military families in Killeen/],
+    ['/', /Practical AI, taught live/],
     ['/learn/', /One live hour/],
     ['/join/', /Tell us what you want to learn/],
     ['/our-work/', /Three projects, each with its evidence state/],
@@ -158,16 +158,16 @@ try {
   const homeBody = await visitor.locator('body').innerText();
   assert.match(homeBody, /Join the list/, 'header CTA should invite the interest list, not a cohort');
   assert.match(homeBody, /Join the interest list/, 'footer CTA should name the interest list');
-  assert.equal(await visitor.locator('.pws-hero__media figcaption').count(), 1, 'hero should carry exactly one illustration disclosure');
-  assert.doesNotMatch(homeBody, /Illustration, not a class photo/, 'duplicate hero disclosure must stay removed');
+  assert.equal(await visitor.locator('.pws-hero__photo').count(), 0, 'no class photo should appear without a consented owner fact');
+  assert.doesNotMatch(homeBody, /Illustration, not a class photo/, 'retired illustration must stay removed');
   const jsonLdRaw = await visitor.locator('script[type="application/ld+json"]').first().textContent();
   const jsonLd = JSON.parse(jsonLdRaw);
   assert.ok(JSON.stringify(jsonLd).includes('NonprofitOrganization'), 'organization schema missing');
   assert.ok(!JSON.stringify(jsonLd).includes('taxID'), 'taxID must stay gated until org_status_confirmed');
 
   await visitor.goto(`${baseURL}/our-work/`, { waitUntil: 'domcontentloaded' });
-  assert.equal(await visitor.locator('.pws-chip').count(), 3, 'catalog must label all three evidence states');
-  assert.match(await visitor.locator('body').innerText(), /\d{4}-\d{2}-\d{2}/, 'evidence chips must carry a checked date');
+  assert.equal(await visitor.locator('.pws-record .tag').count(), 3, 'catalog must label all three evidence states');
+  assert.match(await visitor.locator('.pws-record__checked').first().innerText(), /\d{4}-\d{2}-\d{2}/, 'records must carry a checked date');
   await visitor.goto(`${baseURL}/our-work/hive-mind-os/`, { waitUntil: 'domcontentloaded' });
   assert.ok(await visitor.locator('a[href*="github.com/kb4beast/hive-mind-os"]').count() >= 1, 'public project must link its repository');
 
@@ -198,21 +198,37 @@ try {
     await visitor.goto(`${baseURL}${route}`, { waitUntil: 'networkidle' });
     await assertVisitorChrome(`${route} @390px`);
     if (route === '/impact/') {
-      impactCanary = await visitor.locator('.pws-ledger tbody th').first().evaluate((cell) => cell.getBoundingClientRect().width);
+      impactCanary = await visitor.locator('.table tbody th').first().evaluate((cell) => cell.getBoundingClientRect().width);
       assert.ok(impactCanary >= 200, `impact ledger rows must stay readable at 390px, entry cell was ${impactCanary}px`);
-      ledgerCaptionCanary = await visitor.locator('.pws-ledger caption').first().evaluate((cell) => cell.getBoundingClientRect().width);
+      ledgerCaptionCanary = await visitor.locator('.table caption').first().evaluate((cell) => cell.getBoundingClientRect().width);
       assert.ok(ledgerCaptionCanary >= 200, `ledger caption must not collapse to a sliver at 390px, was ${ledgerCaptionCanary}px`);
     }
     if (route === '/learn/') {
-      syllabusCaptionCanary = await visitor.locator('.pws-syllabus caption').first().evaluate((cell) => cell.getBoundingClientRect().width);
+      syllabusCaptionCanary = await visitor.locator('.table caption').first().evaluate((cell) => cell.getBoundingClientRect().width);
       assert.ok(syllabusCaptionCanary >= 200, `syllabus caption must not collapse to a sliver at 390px, was ${syllabusCaptionCanary}px`);
     }
     await visitor.screenshot({ path: `dist/screenshots/${routeName(route)}-mobile.png`, fullPage: true });
   }
   await visitor.goto(`${baseURL}/`, { waitUntil: 'domcontentloaded' });
-  const menu = visitor.getByRole('button', { name: /open menu/i });
+  const menu = visitor.getByRole('button', { name: /^menu$/i });
   await menu.click();
   assert.equal(await menu.getAttribute('aria-expanded'), 'true');
+  await visitor.setViewportSize({ width: 320, height: 740 });
+  for (const route of ['/about/', '/contact/', '/donate/']) {
+    await visitor.goto(`${baseURL}${route}`, { waitUntil: 'networkidle' });
+    await assertVisitorChrome(`${route} @320px`);
+    const emailLinks = visitor.locator('a[href="mailto:support@patriotwebsolutions.org"]');
+    assert.ok(await emailLinks.count() > 0, `contact address missing on ${route}`);
+    for (const email of await emailLinks.all()) {
+      const visible = await email.evaluate((link) => {
+        const bounds = link.getBoundingClientRect();
+        return link.textContent.trim() === 'support@patriotwebsolutions.org'
+          && bounds.left >= -1 && bounds.right <= window.innerWidth + 1
+          && getComputedStyle(link).whiteSpace !== 'nowrap';
+      });
+      assert.ok(visible, `email clipped or forced onto an unbreakable line: ${route}`);
+    }
+  }
   await visitor.setViewportSize({ width: 1440, height: 1000 });
 
   const redirect = await visitor.request.get(`${baseURL}/offerings/`, { maxRedirects: 0 });
@@ -268,10 +284,10 @@ try {
   const workAfterRollback = await page.request.get(`${baseURL}/our-work/`);
   if (workAfterRollback.status() !== 404) {
     await page.goto(`${baseURL}/our-work/`, { waitUntil: 'domcontentloaded' });
-    assert.ok(!(await page.locator('body').innerText()).includes('Three projects'), 'unmodified release parent must be removed by rollback');
+    assert.ok(!(await page.locator('body').innerText()).includes('Three projects, each with its evidence state'), 'unmodified release parent must be removed by rollback');
   }
   await page.goto(`${baseURL}/`, { waitUntil: 'domcontentloaded' });
-  assert.doesNotMatch(await page.locator('body').innerText(), /We teach military families in Killeen/);
+  assert.doesNotMatch(await page.locator('body').innerText(), /Practical AI, taught live/);
 
   await page.goto(`${baseURL}/wp-admin/tools.php?page=pws-release`, { waitUntil: 'domcontentloaded' });
   const reapply = page.getByRole('button', { name: /apply release/i });
@@ -280,7 +296,7 @@ try {
   await reapply.click();
   await page.getByText(/Release applied/i).waitFor();
   await page.goto(`${baseURL}/`, { waitUntil: 'domcontentloaded' });
-  assert.match(await page.getByRole('heading', { level: 1 }).textContent(), /We teach military families in Killeen/);
+  assert.match(await page.getByRole('heading', { level: 1 }).textContent(), /Practical AI, taught live/);
 
   assert.equal(consoleErrors.length, 0, 'unexplained console errors: ' + JSON.stringify(consoleErrors, null, 2));
   assert.equal(httpErrors.length, 0, 'visitor HTTP >= 400 responses: ' + JSON.stringify(httpErrors, null, 2));
@@ -308,6 +324,7 @@ try {
     desktop_overflow: 'PASS (18 routes, 1440px)',
     tablet_overflow: 'PASS (18 routes, 768px)',
     mobile_overflow: 'PASS (18 routes, 390px)',
+    email_320px_canary: 'PASS (about, contact, donate; full address and breakable links)',
     redirect: 'PASS',
     gone: 'PASS',
     form_controls: 'PASS',
