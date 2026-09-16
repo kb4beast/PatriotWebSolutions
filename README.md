@@ -10,7 +10,7 @@ The release preserves WordPress, GiveWP, WooCommerce, users, orders, donations, 
 powershell -NoProfile -File scripts/Build-Release.ps1
 ```
 
-The finished upload is `dist/patriot-web-solutions-release-1.0.0.zip`. Upload it through WordPress **Plugins → Add New → Upload Plugin**. Follow `INSTALL.md` inside the archive.
+The finished upload is `dist/patriot-web-solutions-release-2.0.0.zip`. Upload it through WordPress **Plugins → Add New → Upload Plugin**. Follow `INSTALL.md` inside the archive.
 
 ## Validation
 
@@ -24,4 +24,4 @@ WordPress/PHP integration is exercised with the pinned WordPress Playground runn
 
 ## Visual direction
 
-The site uses a service-record editorial structure: deep navy, warm paper, restrained red, readable system type, thin rules, and one documentary-style illustrative image. It avoids faux military decoration, generic gradients, fake counters, fabricated testimonials, and unverified outcome claims.
+Release 2.0 uses a type-led dark navy layout with restrained patriotic red and blue, distinct page structures, and no stock or AI-generated imagery. A real class photograph appears only when a consented owner fact is supplied. It avoids fake counters, fabricated testimonials, and unverified outcome claims.

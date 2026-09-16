@@ -4,14 +4,17 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const archive = path.join(root, 'dist', 'patriot-web-solutions-release-1.0.0.zip');
+const releaseVersion = JSON.parse(fs.readFileSync(path.join(root, 'release-plugin', 'patriot-web-solutions', 'payload', 'content.json'), 'utf8')).version;
+const archive = path.join(root, 'dist', `patriot-web-solutions-release-${releaseVersion}.zip`);
 const bundled = path.join(root, 'tests', 'playground', 'plugin.zip');
 if (!fs.existsSync(archive)) throw new Error('Build the release ZIP before clean integration testing.');
 fs.copyFileSync(archive, bundled);
 
 const cli = path.join(root, 'node_modules', '@wp-playground', 'cli', 'wp-playground.js');
 const env = { ...process.env, NODE_OPTIONS: `${process.env.NODE_OPTIONS || ''} --use-system-ca`.trim() };
-const server = spawn(process.execPath, [cli, 'server', '--blueprint=tests/playground', '--blueprint-may-read-adjacent-files', '--port=9411', '--wp=6.5', '--php=8.1'], { cwd: root, env, stdio: ['ignore', 'pipe', 'pipe'] });
+const port = process.env.PWS_TEST_PORT || '9412';
+env.PWS_TEST_URL = `http://127.0.0.1:${port}`;
+const server = spawn(process.execPath, [cli, 'server', '--blueprint=tests/playground', '--blueprint-may-read-adjacent-files', `--port=${port}`, '--wp=6.5', '--php=8.1'], { cwd: root, env, stdio: ['ignore', 'pipe', 'pipe'] });
 let output = '';
 let settled = false;
 
@@ -52,4 +55,3 @@ server.on('exit', (code) => {
     process.exit(code ?? 1);
   }
 });
-

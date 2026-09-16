@@ -10,7 +10,7 @@ const read = (...parts) => fs.readFileSync(path.join(plugin, ...parts), 'utf8');
 const content = JSON.parse(read('payload', 'content.json'));
 const redirects = JSON.parse(read('payload', 'redirects.json'));
 
-assert.equal(content.version, '1.0.0');
+assert.equal(content.version, '2.0.0');
 assert.equal(content.pages.length, 18);
 assert.equal(new Set(content.pages.map((page) => page.slug)).size, content.pages.length);
 const seenSlugs = new Set();
@@ -38,7 +38,7 @@ for (const page of content.pages) {
 }
 
 const allContent = content.pages.map((page) => read('payload', page.source)).join('\n');
-for (const phrase of ['Monday', 'Wednesday', 'Friday', 'No flunk-out', '20–28', '60–84', 'military members', 'families']) {
+for (const phrase of ['Monday', 'Wednesday', 'Friday', 'Train to standard', '20–28', '60–84', 'military members', 'families']) {
   assert.ok(allContent.toLowerCase().includes(phrase.toLowerCase()), `missing mission requirement: ${phrase}`);
 }
 for (const prohibited of ['job guarantee', 'guaranteed employment', 'official partner of OpenAI', 'official partner of Google']) {
@@ -109,13 +109,16 @@ for (const banned of [/google-approved/i, /openai[- ]partner/i, /partnered with 
   assert.doesNotMatch(truthCorpus, banned, `banned claim pattern: ${banned}`);
 }
 if (!orgStatusConfirmed) {
-  assert.doesNotMatch(truthCorpus, /tax[- ]deductible|501\(c\)\(3\)/i, 'tax status language requires org_status_confirmed in facts.json');
+  assert.match(truthCorpus, /ProPublica[^\n]*lists[^\n]*as a 501\(c\)\(3\)/i, 'third-party status must be attributed');
+  assert.match(truthCorpus, /Owner confirmation[^\n]*pending/i, 'status qualification must remain visible');
+  assert.doesNotMatch(truthCorpus, /(?:Patriot Web Solutions|we|our organization)\s+(?:is|are)\s+(?:a\s+)?501\(c\)\(3\)/i, 'organization must not claim unconfirmed status in its own voice');
+  assert.doesNotMatch(truthCorpus, /(?:your\s+)?donations?\s+(?:is|are)\s+tax[- ]deductible/i, 'deductibility claim requires owner confirmation');
 }
 
 const allowedUrls = new Set([
   'https://github.com/kb4beast/hive-mind-os',
   'https://projects.propublica.org/nonprofits/organizations/991238039',
-  'https://www.guidestar.org/profile/99-1238039'
+  'https://app.candid.org/profile/15321808/patriot-web-solutions-99-1238039'
 ]);
 const urlCorpus = visitorCorpus + '\n' + JSON.stringify(projects);
 for (const match of urlCorpus.matchAll(/https?:\/\/[^\s"'<>\\)\]]+/g)) {

@@ -6,6 +6,10 @@
 
 Project records nested under Work (manifest `parent` key; parents are created first, children roll back first): `/our-work/hive-mind-os/`, `/our-work/ai-developer-workbench/`, `/our-work/coupon-hive/`.
 
+## Primary menu
+
+Created by the installer from `payload/content.json` → `primary_navigation`: Learn, Work, Solutions, Impact, About, Partners. Header actions link to `/join/` and `/donate/`; Contact, Field notes, and the policy pages live in the footer. Route set is unchanged from 1.0.0.
+
 ## Exact permanent redirects
 
 - `/offerings/` → `/solutions/`

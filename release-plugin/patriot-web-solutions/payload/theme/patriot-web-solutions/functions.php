@@ -61,14 +61,14 @@ add_action('wp_head', static function (): void {
         return;
     }
     $descriptions = array(
-        'home' => 'Patriot Web Solutions teaches military members, veterans, and their families in Killeen, Texas to build and test AI tools — one live hour, three days a week.',
+        'home' => 'Patriot Web Solutions teaches military members, veterans, and their families in Killeen, Texas practical AI: live human instruction, AI-tailored practice, and a train-to-standard policy where no one gets left behind.',
         'learn' => 'The learning path: Monday, Wednesday, and Friday live hours, a six-week foundations syllabus, and a repeat-until-understood readiness standard.',
         'join' => 'Join the interest list for live, patient AI classes for military members, veterans, and their families.',
         'our-work' => 'Project records with evidence states and checked dates: Hive Mind OS, AI Developer Workbench, and Coupon Hive.',
         'hive-mind-os' => 'Hive Mind OS is our public, MIT-licensed verification framework for AI coding agents. Read the code and check our claims.',
         'ai-developer-workbench' => 'The record of AI Developer Workbench, an earlier custom-GPT project, with its evidence state stated plainly.',
         'coupon-hive' => 'The development record for Coupon Hive, a skills-based savings workflow, with its current status dated on the record.',
-        'solutions' => 'Carefully scoped custom AI tools, workflows, and evaluations — every engagement ships with tests, documentation, and limits.',
+        'solutions' => 'Carefully scoped custom AI tools, workflows, agents, and skills — every engagement starts with discovery and ships with tests, documentation, and limits.',
         'impact' => 'Our accountability ledger: what we can show today, with sources and dates, and what we will not claim yet.',
         'donate' => 'Support live AI instruction for military members, veterans, and their families. Public records and policies are linked before you give.',
         'about' => 'The Patriot Web Solutions record: how we work, the organization listing, and dated public third-party sources.',
@@ -102,15 +102,15 @@ add_action('wp_head', static function (): void {
         'url' => home_url('/'),
         'logo' => get_theme_file_uri('assets/images/logo.png'),
         'email' => 'support@patriotwebsolutions.org',
-        'telephone' => '+1-254-761-5991',
         'address' => array('@type' => 'PostalAddress', 'addressLocality' => 'Killeen', 'addressRegion' => 'TX', 'addressCountry' => 'US'),
         'areaServed' => 'United States',
         'sameAs' => array(
             'https://github.com/kb4beast/hive-mind-os',
             'https://projects.propublica.org/nonprofits/organizations/991238039',
-            'https://www.guidestar.org/profile/99-1238039',
+            'https://app.candid.org/profile/15321808/patriot-web-solutions-99-1238039',
         ),
         'description' => 'Practical AI learning for military members, veterans, and their families.',
+        'founder' => array('@type' => 'Person', 'name' => 'Brian Espinosa', 'jobTitle' => 'President and Founder'),
     );
     if (class_exists('PWS_Facts')) {
         if (PWS_Facts::has('street_address')) {
@@ -132,6 +132,7 @@ function pws_primary_fallback(): void
     $items = array(
         'Learn' => '/learn/',
         'Work' => '/our-work/',
+        'Solutions' => '/solutions/',
         'Impact' => '/impact/',
         'About' => '/about/',
         'Partners' => '/get-involved/',
@@ -141,4 +142,28 @@ function pws_primary_fallback(): void
         echo '<li><a href="' . esc_url(home_url($path)) . '">' . esc_html($label) . '</a></li>';
     }
     echo '</ul>';
+}
+
+/**
+ * Inline Phosphor-style icon (MIT; see LICENSES.md). Returns '' for unknown names so templates never break.
+ */
+function pws_icon(string $name, string $class = ''): string
+{
+    static $paths = null;
+    if ($paths === null) {
+        $stroke = static fn(string $d): string => '<path d="' . $d . '" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>';
+        $paths = array(
+            'arrow-right' => '<path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/>',
+            'calendar' => '<path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Zm-96-88v64a8,8,0,0,1-16,0V132.94l-4.42,2.22a8,8,0,0,1-7.16-14.32l16-8A8,8,0,0,1,112,120Zm59.16,30.45L152,176h16a8,8,0,0,1,0,16H136a8,8,0,0,1-6.4-12.8l28.78-38.37A8,8,0,1,0,145.07,132a8,8,0,1,1-13.85-8A24,24,0,0,1,176,136,23.76,23.76,0,0,1,171.16,150.45Z"/>',
+            'check' => $stroke('M216 72 104 184 40 120'),
+            'x' => $stroke('M200 56 56 200M56 56l144 144'),
+            'list' => $stroke('M40 128h176M40 64h176M40 192h176'),
+            'arrow-up-right' => $stroke('M64 192 192 64M88 64h104v104'),
+        );
+    }
+    if (!isset($paths[$name])) {
+        return '';
+    }
+    $classes = trim('pws-icon ' . $class);
+    return '<svg class="' . esc_attr($classes) . '" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" focusable="false">' . $paths[$name] . '</svg>';
 }

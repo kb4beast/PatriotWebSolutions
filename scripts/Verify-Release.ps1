@@ -3,7 +3,8 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
-$archive = Join-Path $projectRoot 'dist/patriot-web-solutions-release-1.0.0.zip'
+$releaseVersion = (Get-Content -Raw -LiteralPath (Join-Path $projectRoot 'release-plugin/patriot-web-solutions/payload/content.json') | ConvertFrom-Json).version
+$archive = Join-Path $projectRoot "dist/patriot-web-solutions-release-$releaseVersion.zip"
 
 if (-not (Test-Path -LiteralPath $archive)) {
     throw 'Release archive is missing. Run npm run build first.'
@@ -49,6 +50,9 @@ try {
 
     if ($names.Count -ne (@($manifest.files).Count + 1)) {
         throw "Archive entry count does not match its manifest: $($names.Count) entries."
+    }
+    if ($manifest.release -ne "patriot-web-solutions-$releaseVersion") {
+        throw "Archive release version does not match source: $($manifest.release)"
     }
     foreach ($file in $manifest.files) {
         $entryName = 'patriot-web-solutions/' + [string] $file.path

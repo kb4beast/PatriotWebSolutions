@@ -11,6 +11,9 @@ final class PWS_Public
         add_shortcode('pws_donation', array(__CLASS__, 'donation'));
         add_shortcode('pws_project_catalog', array(__CLASS__, 'project_catalog'));
         add_shortcode('pws_hero_image', array(__CLASS__, 'hero_image'));
+        add_shortcode('pws_icon', array(__CLASS__, 'icon'));
+        add_shortcode('pws_fact', array(__CLASS__, 'fact'));
+        add_shortcode('pws_founder_note', array(__CLASS__, 'founder_note'));
         add_action('template_redirect', array(__CLASS__, 'redirect_legacy_routes'), 1);
         add_action('send_headers', array(__CLASS__, 'security_headers'));
         add_filter('document_title_separator', static fn(): string => '—');
@@ -33,37 +36,75 @@ final class PWS_Public
     {
         $form_id = self::find_give_form_id();
         if ($form_id > 0 && shortcode_exists('give_form')) {
-            return '<div class="pws-donation-embed">' . do_shortcode('[give_form id="' . $form_id . '"]') . '</div>';
+            return '<div class="card pws-donation-embed">' . do_shortcode('[give_form id="' . $form_id . '"]') . '</div>';
         }
-        return '<div class="pws-notice"><h3>No online donations today</h3><p>This page has no live donation form. To give or ask a question now, email <a href="mailto:support@patriotwebsolutions.org">support@patriotwebsolutions.org</a>.</p></div>';
+        return '<aside class="card pws-notice" aria-label="Donation status"><span class="tag tag-neutral">No online donations today</span><h3>This page has no live donation form.</h3><p>To give or ask a question now, email <a href="mailto:support@patriotwebsolutions.org">support@patriotwebsolutions.org</a>. The payment processor and receipt language are under review.</p></aside>';
+    }
+
+    /** [pws_icon name="check"] — inline Phosphor-style SVG from the theme's icon set. */
+    public static function icon($atts): string
+    {
+        $atts = shortcode_atts(array('name' => '', 'class' => ''), (array) $atts, 'pws_icon');
+        return function_exists('pws_icon') ? pws_icon(sanitize_key((string) $atts['name']), sanitize_html_class((string) $atts['class'])) : '';
+    }
+
+    /**
+     * [pws_fact key="class_time_ct" prefix="" suffix="" fallback=""] — renders a confirmed owner fact from payload/facts.json,
+     * or the fallback sentence when the fact is absent. Both branches render complete visitor copy.
+     */
+    public static function fact($atts): string
+    {
+        $atts = shortcode_atts(array('key' => '', 'prefix' => '', 'suffix' => '', 'fallback' => ''), (array) $atts, 'pws_fact');
+        $key = sanitize_key((string) $atts['key']);
+        if ($key !== '' && PWS_Facts::has($key)) {
+            return esc_html((string) $atts['prefix'] . PWS_Facts::get($key) . (string) $atts['suffix']);
+        }
+        return esc_html((string) $atts['fallback']);
+    }
+
+    /** [pws_founder_note] — a signed note, rendered only once founder_note (and optionally founder_name) are confirmed facts. */
+    public static function founder_note(): string
+    {
+        if (!PWS_Facts::has('founder_note')) {
+            return '';
+        }
+        $by = PWS_Facts::has('founder_name') ? '<figcaption>— ' . esc_html((string) PWS_Facts::get('founder_name')) . '</figcaption>' : '';
+        return '<section class="pws-wrap pws-section"><p class="pws-kicker">A note from the founder</p><figure class="pws-quote"><blockquote>“' . esc_html((string) PWS_Facts::get('founder_note')) . '”</blockquote>' . $by . '</figure></section>';
     }
 
     public static function project_catalog(): string
     {
         $decoded = json_decode((string) file_get_contents(PWS_RELEASE_DIR . 'payload/projects.json'), true);
         $projects = is_array($decoded['projects'] ?? null) ? $decoded['projects'] : array();
+        $tags = array('public' => 'tag-accent', 'historical' => 'tag-neutral', 'development' => 'tag-outline');
         ob_start(); ?>
-        <div class="pws-records">
-            <?php foreach ($projects as $project) : ?>
-                <article class="pws-record" id="<?php echo esc_attr((string) ($project['slug'] ?? '')); ?>">
-                    <p class="pws-chip pws-chip--<?php echo esc_attr((string) ($project['state'] ?? 'development')); ?>"><?php echo esc_html((string) ($project['state_label'] ?? '')); ?> — <?php echo esc_html((string) ($project['checked_label'] ?? '')); ?></p>
-                    <h3><a href="<?php echo esc_url(home_url('/our-work/' . (string) ($project['slug'] ?? '') . '/')); ?>"><?php echo esc_html((string) ($project['name'] ?? '')); ?></a></h3>
-                    <p><?php echo esc_html((string) ($project['summary'] ?? '')); ?></p>
-                    <?php if (($project['state'] ?? '') === 'public') : ?>
-                        <?php foreach (($project['links'] ?? array()) as $link) : ?>
-                            <p class="pws-record__link"><a href="<?php echo esc_url((string) ($link['url'] ?? '')); ?>" rel="external noopener"><?php echo esc_html((string) ($link['label'] ?? '')); ?> (external)</a></p>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </article>
+        <ul class="pws-records">
+            <?php foreach ($projects as $project) : $state = (string) ($project['state'] ?? 'development'); ?>
+                <li class="pws-record" id="<?php echo esc_attr((string) ($project['slug'] ?? '')); ?>">
+                    <div><span class="tag <?php echo esc_attr($tags[$state] ?? 'tag-outline'); ?>"><?php echo esc_html((string) ($project['state_label'] ?? '')); ?></span><h2><a href="<?php echo esc_url(home_url('/our-work/' . (string) ($project['slug'] ?? '') . '/')); ?>"><?php echo esc_html((string) ($project['name'] ?? '')); ?></a></h2><p class="pws-record__checked"><?php echo esc_html(ucfirst((string) ($project['checked_label'] ?? ''))); ?></p></div>
+                    <div class="pws-record__body"><p><?php echo esc_html((string) ($project['summary'] ?? '')); ?></p>
+                    <?php if ($state === 'public') : foreach (($project['links'] ?? array()) as $link) : ?>
+                        <p><a href="<?php echo esc_url((string) ($link['url'] ?? '')); ?>" rel="external noopener"><?php echo esc_html((string) ($link['label'] ?? '')); ?> <?php echo function_exists('pws_icon') ? pws_icon('arrow-up-right') : ''; ?><span class="screen-reader-text"> (external)</span></a></p>
+                    <?php endforeach; endif; ?>
+                    <p><a href="<?php echo esc_url(home_url('/our-work/' . (string) ($project['slug'] ?? '') . '/')); ?>">Read the record <?php echo function_exists('pws_icon') ? pws_icon('arrow-right') : ''; ?></a></p></div>
+                </li>
             <?php endforeach; ?>
-        </div>
+        </ul>
         <?php return (string) ob_get_clean();
     }
 
+    /** The hero shows a real class photograph only when the owner has confirmed consent (fact hero_photo = image URL). Otherwise nothing renders. */
     public static function hero_image(): string
     {
-        $src = get_theme_file_uri('assets/images/ai-learning-workshop.png');
-        return '<figure class="pws-hero__media"><img src="' . esc_url($src) . '" width="1536" height="1024" alt="Illustration of adults learning practical AI skills together in a community workshop"><figcaption>Illustrative scene. We use real participant images only with permission.</figcaption></figure>';
+        if (!PWS_Facts::has('hero_photo')) {
+            return '';
+        }
+        $src = esc_url((string) PWS_Facts::get('hero_photo'));
+        if ($src === '') {
+            return '';
+        }
+        $alt = PWS_Facts::has('hero_photo_alt') ? (string) PWS_Facts::get('hero_photo_alt') : 'Learners in a Patriot Web Solutions class';
+        return '<figure class="pws-hero__photo lighten"><img src="' . $src . '" alt="' . esc_attr($alt) . '" loading="eager"><figcaption>Photograph published with the written consent of everyone shown.</figcaption></figure>';
     }
 
     public static function redirect_legacy_routes(): void

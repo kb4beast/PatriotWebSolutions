@@ -10,10 +10,17 @@
 ## Upload and preflight
 
 1. In WordPress, open **Plugins → Add New → Upload Plugin**.
-2. Upload `patriot-web-solutions-release-1.0.0.zip`, install it, and activate it.
+2. Upload `patriot-web-solutions-release-2.0.0.zip`, install it, and activate it.
 3. Activation does not change the public site. Open **Tools → Patriot site release**.
 4. Set the GiveWP form ID if more than one published donation form exists. Confirm the form email recipient.
 5. Resolve every failed preflight. For existing-page conflicts, inspect each listed route and select the explicit replacement checkbox only after confirming the release copy is correct. The installer captures the original fields in its rollback snapshot and asks WordPress to retain a revision.
+
+## Upgrading a staging site that already has release 1.0.0 applied
+
+1. Open **Tools → Patriot site release → Roll back release** while the 1.0.0 plugin is still installed. This restores the prior theme and menu and trashes the unmodified 1.0.0 pages (modified pages are preserved for review).
+2. Replace the plugin with the 2.0.0 upload (WordPress offers "Replace current with uploaded"). Public shortcodes, redirects, and security headers stay registered while any applied version is recorded, so the site does not degrade between upload and apply.
+3. Run preflight again. The 1.0.0 theme directory is left on disk by rollback; because it is inactive and carries this theme's header, apply renames it to `patriot-web-solutions-retired-<timestamp>` and installs 2.0.0. An active or foreign directory of the same name still blocks apply, as before.
+4. Any 1.0.0 pages preserved by rollback appear in preflight as existing-page conflicts; review each before selecting replacement.
 
 ## Apply and verify on staging
 
@@ -29,5 +36,7 @@
 ## Production
 
 Repeat preflight on the current production database. Apply only after staging acceptance and an immediately current backup. Preserve DNS/MX/TXT records and payment/webhook configuration. After apply, repeat the critical route, form, donation, account, cache, and HTTPS checks.
+
+The release ships without a hero photograph: the home page renders type-only until the owner records a consented image URL in `payload/facts.json` (`hero_photo`, optional `hero_photo_alt`). No AI-generated imagery is included.
 
 The package does not configure payment credentials, send a real transaction, establish tax status, obtain Google Ad Grants, verify an OpenAI organization, or publish an OpenAI product.

@@ -8,7 +8,8 @@
 | Accounts/orders | Determined by existing WordPress/WooCommerce setup | Existing WordPress/WooCommerce data stores | Preserved; no migration or redirect of transactional routes without review |
 | Analytics/ads | None added by this release | None | Configure only after vendor, consent, privacy, and conversion requirements are approved |
 | Installer | Page IDs, note draft IDs, release version, prior theme/front-page/menu/site-title settings | WordPress options and post metadata | Supports idempotence and scoped rollback; sets `blogname`/`blogdescription` only when they are WordPress defaults and restores them on rollback; contains no credentials |
-| Static data files | `payload/projects.json` (project catalog), `payload/facts.json` (confirmed owner facts; ships near-empty) | Read at render time; nothing stored | No personal data; no network calls |
+| Static data files | `payload/projects.json` (project catalog), `payload/facts.json` (confirmed owner facts; ships empty), `payload/link-check-receipt.json` (dated results of the build-time check of every external link) | Read at render time (projects, facts) or shipped for reviewers (link-check receipt); nothing stored | No personal data; no network calls from the site |
+| Fonts and icons | None fetched | None | Inter is named with system fallbacks; icons are inline SVG from the theme |
 
 The final privacy notice must be reconciled with the actual live plugins, hosting logs, backups, email system, processor, analytics, consent tooling, retention, and applicable rights.
 

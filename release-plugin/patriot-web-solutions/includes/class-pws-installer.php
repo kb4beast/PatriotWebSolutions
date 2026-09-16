@@ -22,6 +22,18 @@ final class PWS_Installer
         return is_array($applied) && ($applied['version'] ?? '') === PWS_RELEASE_VERSION;
     }
 
+    public static function is_any_applied(): bool
+    {
+        $applied = get_option(self::APPLIED_OPTION);
+        return is_array($applied) && !empty($applied['version']);
+    }
+
+    public static function applied_version(): string
+    {
+        $applied = get_option(self::APPLIED_OPTION);
+        return is_array($applied) ? (string) ($applied['version'] ?? '') : '';
+    }
+
     public static function recovery_pending(): bool
     {
         return !self::is_applied() && is_array(get_option(self::ROLLBACK_OPTION));
@@ -47,6 +59,8 @@ final class PWS_Installer
             array('label' => 'Site contact recipient configured', 'pass' => (bool) is_email((string) get_option('pws_form_recipient', get_option('admin_email'))), 'detail' => (string) get_option('pws_form_recipient', get_option('admin_email'))),
             array('label' => 'Active GiveWP donation form detected', 'pass' => $give_form_id > 0, 'detail' => $give_form_id > 0 ? 'Published give_forms ID ' . $give_form_id : 'GiveWP and a published donation form were not both detected; the donation page will show a configuration notice'),
             array('label' => 'Permalink structure supports pages', 'pass' => (string) get_option('permalink_structure') !== '', 'detail' => (string) get_option('permalink_structure') ?: 'Plain permalinks'),
+            array('label' => 'No earlier release version still applied', 'pass' => !self::is_any_applied() || self::is_applied(), 'detail' => self::is_any_applied() && !self::is_applied() ? 'Release ' . self::applied_version() . ' is applied. Roll it back first (Scoped rollback below); this ' . PWS_RELEASE_VERSION . ' apply then treats its pages as reviewed conflicts.' : 'Clear'),
+            array('label' => 'Bundled theme directory free or upgradeable', 'pass' => self::theme_directory_state() !== 'conflict', 'detail' => self::theme_directory_detail()),
         );
 
         $page_conflicts = array();
@@ -87,11 +101,6 @@ final class PWS_Installer
             return new WP_Error('pws_page_conflicts', 'Review the existing page conflicts and explicitly authorize their replacement.');
         }
 
-        $theme_result = self::install_theme_payload();
-        if (is_wp_error($theme_result)) {
-            return $theme_result;
-        }
-
         $manifest = self::content_manifest();
         $snapshot = array(
             'version' => PWS_RELEASE_VERSION,
@@ -118,8 +127,17 @@ final class PWS_Installer
             'pending_menu' => false,
             'created_term_id' => 0,
             'pending_term' => false,
+            'retired_theme_dir' => '',
         );
         self::checkpoint($snapshot);
+
+        $theme_result = self::install_theme_payload($snapshot);
+        if (is_wp_error($theme_result)) {
+            if (empty($snapshot['retired_theme_dir'])) {
+                delete_option(self::ROLLBACK_OPTION);
+            }
+            return $theme_result;
+        }
 
         $field_notes = get_term_by('slug', self::FIELD_NOTES_SLUG, 'category');
         if (!$field_notes) {
@@ -297,21 +315,62 @@ final class PWS_Installer
         return array('status' => 'applied', 'pages' => $page_ids, 'give_form_id' => PWS_Public::find_give_form_id());
     }
 
-    private static function install_theme_payload()
+    /**
+     * 'absent' | 'current' (same version) | 'upgradeable' (an inactive earlier release of this theme) | 'conflict'.
+     */
+    private static function theme_directory_state(): string
+    {
+        $target = WP_CONTENT_DIR . '/themes/patriot-web-solutions';
+        if (!is_dir($target)) {
+            return 'absent';
+        }
+        $style = $target . '/style.css';
+        $contents = is_file($style) ? (string) file_get_contents($style) : '';
+        if (strpos($contents, 'Version: ' . PWS_RELEASE_VERSION) !== false) {
+            return 'current';
+        }
+        $ours = strpos($contents, 'Text Domain: patriot-web-solutions') !== false && strpos($contents, 'Theme Name: Patriot Web Solutions') !== false;
+        $inactive = get_stylesheet() !== 'patriot-web-solutions' && get_template() !== 'patriot-web-solutions';
+        return ($ours && $inactive) ? 'upgradeable' : 'conflict';
+    }
+
+    private static function theme_directory_detail(): string
+    {
+        switch (self::theme_directory_state()) {
+            case 'absent':
+                return 'Will be installed at ' . WP_CONTENT_DIR . '/themes/patriot-web-solutions';
+            case 'current':
+                return 'Release theme ' . PWS_RELEASE_VERSION . ' already present';
+            case 'upgradeable':
+                return 'An earlier inactive release of this theme is present; apply renames it to a dated -retired- directory and installs ' . PWS_RELEASE_VERSION;
+            default:
+                return 'A different or active patriot-web-solutions theme directory exists. Roll back the earlier release or rename the directory before applying.';
+        }
+    }
+
+    private static function install_theme_payload(array &$snapshot)
     {
         require_once ABSPATH . 'wp-admin/includes/file.php';
         if (!WP_Filesystem()) {
             return new WP_Error('pws_filesystem_unavailable', 'WordPress could not initialize filesystem access for the bundled theme.');
         }
+        global $wp_filesystem;
         $source = PWS_RELEASE_DIR . 'payload/theme/patriot-web-solutions';
         $target = WP_CONTENT_DIR . '/themes/patriot-web-solutions';
-        if (is_dir($target)) {
-            $style = $target . '/style.css';
-            $contents = is_file($style) ? (string) file_get_contents($style) : '';
-            if (strpos($contents, 'Version: ' . PWS_RELEASE_VERSION) === false) {
-                return new WP_Error('pws_theme_conflict', 'A different patriot-web-solutions theme directory already exists. Rename or back it up before applying.');
-            }
+        $state = self::theme_directory_state();
+        if ($state === 'current') {
             return true;
+        }
+        if ($state === 'conflict') {
+            return new WP_Error('pws_theme_conflict', 'A different or active patriot-web-solutions theme directory already exists. Roll back the earlier release or rename the directory before applying.');
+        }
+        if ($state === 'upgradeable') {
+            $retired = $target . '-retired-' . gmdate('Ymd-His');
+            if (!$wp_filesystem->move($target, $retired)) {
+                return new WP_Error('pws_theme_retire_failed', 'The earlier release theme directory could not be renamed. Rename it manually and apply again.');
+            }
+            $snapshot['retired_theme_dir'] = $retired;
+            self::checkpoint($snapshot);
         }
         $result = copy_dir($source, $target);
         return is_wp_error($result) ? $result : true;
@@ -394,7 +453,7 @@ final class PWS_Installer
         delete_option(self::APPLIED_OPTION);
         delete_option(self::ROLLBACK_OPTION);
         flush_rewrite_rules(false);
-        return array('status' => 'rolled-back', 'preserved_modified_page_ids' => array_values(array_unique($preserved)));
+        return array('status' => 'rolled-back', 'preserved_modified_page_ids' => array_values(array_unique($preserved)), 'retired_theme_dir' => (string) ($snapshot['retired_theme_dir'] ?? ''));
     }
 
     private static function rollback_snapshot(array $snapshot): void

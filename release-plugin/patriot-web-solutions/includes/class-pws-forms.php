@@ -29,44 +29,46 @@ final class PWS_Forms
         $status = sanitize_key((string) ($_GET['form_status'] ?? ''));
         $message = '';
         if ($status === 'sent') {
-            $message = '<div class="pws-notice pws-notice--success" role="status">Thank you. Your message was sent, and our team will follow up using the contact information you provided.</div>';
+            $message = '<div class="card pws-notice pws-notice--success" role="status"><span class="tag">Sent</span><h3>Thank you.</h3><p>Your message was sent, and our team will follow up using the contact information you provided.</p></div>';
         } elseif ($status === 'error') {
-            $message = '<div class="pws-notice pws-notice--error" role="alert">We could not send your message. Please email <a href="mailto:support@patriotwebsolutions.org">support@patriotwebsolutions.org</a> or call <a href="tel:+12547615991">(254) 761-5991</a>.</div>';
+            $message = '<div class="card pws-notice pws-notice--error" role="alert"><span class="tag">Not sent</span><h3>We could not send your message.</h3><p>Please email <a href="mailto:support@patriotwebsolutions.org">support@patriotwebsolutions.org</a>. A delivery failure on our side is never your problem to debug.</p></div>';
         }
         $is_interest = $kind === 'interest';
         ob_start();
         echo wp_kses_post($message);
         ?>
-        <form class="pws-form" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post">
+        <form class="card pws-form" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post">
             <input type="hidden" name="action" value="pws_submit_form">
             <input type="hidden" name="pws_kind" value="<?php echo esc_attr($kind); ?>">
             <?php wp_nonce_field('pws_submit_' . $kind, 'pws_nonce'); ?>
             <div class="pws-honeypot" aria-hidden="true"><label>Leave this empty <input name="website" tabindex="-1" autocomplete="off"></label></div>
             <div class="pws-form__grid">
-                <label>First name <input type="text" name="first_name" autocomplete="given-name" required maxlength="80"></label>
-                <label>Last name <input type="text" name="last_name" autocomplete="family-name" required maxlength="80"></label>
-                <label>Email <input type="email" name="email" autocomplete="email" required maxlength="190"></label>
-                <label>Phone <span class="pws-optional">optional</span><input type="tel" name="phone" autocomplete="tel" maxlength="40"></label>
+                <div class="field"><label for="pws-<?php echo esc_attr($kind); ?>-first">First name</label><input class="input" id="pws-<?php echo esc_attr($kind); ?>-first" type="text" name="first_name" autocomplete="given-name" required maxlength="80"></div>
+                <div class="field"><label for="pws-<?php echo esc_attr($kind); ?>-last">Last name</label><input class="input" id="pws-<?php echo esc_attr($kind); ?>-last" type="text" name="last_name" autocomplete="family-name" required maxlength="80"></div>
+                <div class="field"><label for="pws-<?php echo esc_attr($kind); ?>-email">Email</label><input class="input" id="pws-<?php echo esc_attr($kind); ?>-email" type="email" name="email" autocomplete="email" required maxlength="190"></div>
+                <div class="field"><label for="pws-<?php echo esc_attr($kind); ?>-phone">Phone <span class="pws-optional">(optional)</span></label><input class="input" id="pws-<?php echo esc_attr($kind); ?>-phone" type="tel" name="phone" autocomplete="tel" maxlength="40"></div>
             </div>
             <?php if ($is_interest) : ?>
-                <fieldset>
+                <fieldset class="field">
                     <legend>I am interested in</legend>
-                    <label class="pws-check"><input type="checkbox" name="interest[]" value="AI foundations"> AI foundations</label>
-                    <label class="pws-check"><input type="checkbox" name="interest[]" value="Skills and plugins"> Skills and plugins</label>
-                    <label class="pws-check"><input type="checkbox" name="interest[]" value="APIs and workflows"> APIs and workflows</label>
-                    <label class="pws-check"><input type="checkbox" name="interest[]" value="Agents and evaluation"> Agents and evaluation</label>
+                    <div class="pws-form__checks">
+                        <label class="pws-check"><input type="checkbox" name="interest[]" value="AI foundations"><span>AI foundations</span></label>
+                        <label class="pws-check"><input type="checkbox" name="interest[]" value="Skills and plugins"><span>Skills and plugins</span></label>
+                        <label class="pws-check"><input type="checkbox" name="interest[]" value="APIs and workflows"><span>APIs and workflows</span></label>
+                        <label class="pws-check"><input type="checkbox" name="interest[]" value="Agents and evaluation"><span>Agents and evaluation</span></label>
+                    </div>
                 </fieldset>
-                <label>Military or family connection <span class="pws-optional">optional</span>
-                    <select name="connection"><option value="">Prefer not to say</option><option>Service member</option><option>Veteran</option><option>Military family member</option><option>Supporter or community partner</option></select>
-                </label>
+                <div class="field"><label for="pws-interest-connection">Military or family connection <span class="pws-optional">(optional)</span></label>
+                    <select class="input" id="pws-interest-connection" name="connection"><option value="">Prefer not to say</option><option>Service member</option><option>Veteran</option><option>Military family member</option><option>Supporter or community partner</option></select>
+                </div>
             <?php else : ?>
-                <label>What can we help with?
-                    <select name="topic" required><option value="">Choose one</option><option>Learning cohorts</option><option>Donations</option><option>Custom AI solutions</option><option>Employer / workforce partnership</option><option>Volunteer or mentor</option><option>Accessibility</option><option>Media or partnership</option><option>Something else</option></select>
-                </label>
+                <div class="field"><label for="pws-contact-topic">What can we help with?</label>
+                    <select class="input" id="pws-contact-topic" name="topic" required><option value="">Choose one</option><option>Learning cohorts</option><option>Donations</option><option>Custom AI solutions</option><option>Employer / workforce partnership</option><option>Volunteer or mentor</option><option>Accessibility</option><option>Media or partnership</option><option>Something else</option></select>
+                </div>
             <?php endif; ?>
-            <label>Message <span class="pws-optional">optional</span><textarea name="message" rows="5" maxlength="2000"></textarea></label>
-            <label class="pws-check"><input type="checkbox" name="consent" value="1" required> You may use these details to respond to this request. See our <a href="<?php echo esc_url(home_url('/privacy/')); ?>">privacy notice</a>.</label>
-            <button class="pws-button" type="submit"><?php echo $is_interest ? 'Join the interest list' : 'Send message'; ?></button>
+            <div class="field"><label for="pws-<?php echo esc_attr($kind); ?>-message">Message <span class="pws-optional">(optional)</span></label><textarea class="input" id="pws-<?php echo esc_attr($kind); ?>-message" name="message" rows="5" maxlength="2000"></textarea></div>
+            <label class="pws-check"><input type="checkbox" name="consent" value="1" required><span>You may use these details to respond to this request. See our <a href="<?php echo esc_url(home_url('/privacy/')); ?>">privacy notice</a>.</span></label>
+            <button class="btn btn-primary" type="submit"><?php echo $is_interest ? 'Join the interest list' : 'Send message'; ?></button>
             <p class="pws-form__note">Do not send Social Security numbers, military IDs, medical information, passwords, or payment-card details.</p>
         </form>
         <?php

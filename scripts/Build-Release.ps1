@@ -5,8 +5,10 @@ $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $pluginSource = Join-Path $projectRoot 'release-plugin/patriot-web-solutions'
 $dist = Join-Path $projectRoot 'dist'
-$stage = Join-Path $projectRoot '.build-stage'
-$archive = Join-Path $dist 'patriot-web-solutions-release-1.0.0.zip'
+$stage = Join-Path $projectRoot '.build-stage/release-packaging'
+$releaseVersion = (Get-Content -Raw -LiteralPath (Join-Path $pluginSource 'payload/content.json') | ConvertFrom-Json).version
+if ($releaseVersion -notmatch '^\d+\.\d+\.\d+$') { throw 'Invalid release version.' }
+$archive = Join-Path $dist "patriot-web-solutions-release-$releaseVersion.zip"
 $manifestPath = Join-Path $pluginSource 'release-manifest.json'
 $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 
@@ -46,7 +48,7 @@ $manifestFiles = Get-ChildItem -LiteralPath $pluginSource -Recurse -File |
 
 $manifest = [ordered]@{
     schema_version = 1
-    release = 'patriot-web-solutions-1.0.0'
+    release = "patriot-web-solutions-$releaseVersion"
     artifact_kind = 'WordPress installer plugin with bundled theme and reversible content migration'
     generated_at_utc = (Get-Date).ToUniversalTime().ToString('o')
     minimum_wordpress = '6.5'
@@ -81,7 +83,7 @@ Remove-Item -LiteralPath $stage -Recurse -Force
 
 $receipt = [ordered]@{
     generated_at_utc = (Get-Date).ToUniversalTime().ToString('o')
-    artifact = 'dist/patriot-web-solutions-release-1.0.0.zip'
+    artifact = "dist/patriot-web-solutions-release-$releaseVersion.zip"
     bytes = (Get-Item -LiteralPath $archive).Length
     sha256 = Get-PwsSha256 $archive
     file_count_excluding_manifest = @($manifestFiles).Count
